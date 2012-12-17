@@ -10,15 +10,15 @@ public class SayPacket extends Packet
 
 	private String message;
 
-	public SayPacket()
+	public SayPacket(long sender)
 	{
-		setOpCode(OpCodes.Client.CMSG_SAY);
+		super(OpCodes.Client.CMSG_SAY, sender);
 	}
 
-	public SayPacket(String message)
+	public SayPacket(long sender, String message)
 	{
+		super(OpCodes.Client.CMSG_SAY, sender);
 		this.message = message;
-		setOpCode(OpCodes.Client.CMSG_SAY);
 	}
 
 	public String getMessage()

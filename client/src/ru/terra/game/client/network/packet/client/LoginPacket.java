@@ -10,10 +10,10 @@ public class LoginPacket extends Packet
 
 	private String name;
 
-	public LoginPacket(String name)
+	public LoginPacket(long sender,String name)
 	{
+		super(OpCodes.Client.CMSG_LOGIN, sender);
 		this.name = name;
-		setOpCode(OpCodes.Client.CMSG_LOGIN);
 	}
 
 	@Override

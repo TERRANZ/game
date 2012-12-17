@@ -3,6 +3,7 @@
 	<name>gameserver</name>
 	<comment></comment>
 	<projects>
+		<project>gameshared</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

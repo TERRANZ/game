@@ -7,17 +7,18 @@ import ru.terra.game.shared.constants.OpCodes.Client;
 public class SayPacket extends Packet
 {
 
+	public SayPacket(long sender)
+	{
+		super(Client.CMSG_SAY, sender);
+	}
+
+	public SayPacket(long sender, String message)
+	{
+		super(Client.CMSG_SAY, sender);
+		setMessage(message);
+	}
+
 	private String message;
-
-	public SayPacket()
-	{
-		setOpCode(Client.CMSG_SAY);
-	}
-
-	public SayPacket(String message)
-	{
-		this.message = message;
-	}
 
 	public String getMessage()
 	{

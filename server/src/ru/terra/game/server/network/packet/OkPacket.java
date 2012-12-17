@@ -6,14 +6,12 @@ import ru.terra.game.shared.constants.OpCodes.Server;
 
 public class OkPacket extends Packet
 {
-
 	private long guid;
 
 	public OkPacket(long guid)
 	{
-		super();
+		super(Server.SMSG_OK, guid);
 		this.guid = guid;
-		setOpCode(Server.SMSG_OK);
 	}
 
 	@Override

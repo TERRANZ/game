@@ -47,7 +47,7 @@ public class NetworkManager
 		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers())
 		{
 			if (playerEntity.getGUID() != playerGUID)
-				playerEntity.getChannel().write(new SayPacket(message));
+				playerEntity.getChannel().write(new SayPacket(playerGUID, message));
 		}
 	}
 }

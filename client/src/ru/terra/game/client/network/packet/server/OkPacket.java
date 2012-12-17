@@ -19,9 +19,9 @@ public class OkPacket extends Packet
 		this.guid = guid;
 	}
 
-	public OkPacket()
+	public OkPacket(long sender)
 	{
-		setOpCode(OpCodes.Server.SMSG_OK);
+		super(OpCodes.Server.SMSG_OK, sender);
 	}
 
 	@Override

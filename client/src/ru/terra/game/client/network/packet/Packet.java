@@ -13,6 +13,12 @@ public abstract class Packet
 	private int opCode;
 	private long sender;
 
+	public Packet(int opCode, long sender)
+	{
+		this.opCode = opCode;
+		this.sender = sender;
+	}
+
 	public long getSender()
 	{
 		return sender;
@@ -33,14 +39,14 @@ public abstract class Packet
 		this.opCode = id;
 	}
 
-	private static Packet getServerPacket(int opCode)
+	private static Packet getServerPacket(int opCode, long sender)
 	{
 		switch (opCode)
 		{
 		case OpCodes.Server.SMSG_OK:
-			return new OkPacket();
+			return new OkPacket(sender);
 		case OpCodes.Server.SMSG_SAY:
-			return new SayPacket();
+			return new SayPacket(sender);
 		}
 		return null;
 	}
@@ -48,9 +54,11 @@ public abstract class Packet
 	public static Packet read(ChannelBuffer buffer) throws IOException
 	{
 		int id = buffer.readUnsignedShort();
-		Packet packet = getServerPacket(id);
+		long sguid = buffer.readLong();
+		Packet packet = getServerPacket(id, sguid);
 		if (packet == null)
 			throw new IOException("Bad packet ID: " + id);
+
 		packet.get(buffer);
 		return packet;
 	}
@@ -58,6 +66,7 @@ public abstract class Packet
 	public static Packet write(Packet packet, ChannelBuffer buffer)
 	{
 		buffer.writeChar(packet.getOpCode());
+		buffer.writeLong(packet.getSender());
 		packet.send(buffer);
 		return packet;
 	}

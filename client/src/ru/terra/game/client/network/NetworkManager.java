@@ -2,6 +2,7 @@ package ru.terra.game.client.network;
 
 import org.jboss.netty.channel.Channel;
 
+import ru.terra.game.client.game.GameManager;
 import ru.terra.game.client.network.packet.Packet;
 import ru.terra.game.client.network.packet.client.LoginPacket;
 import ru.terra.game.client.network.packet.client.SayPacket;
@@ -44,12 +45,12 @@ public class NetworkManager
 
 	public void sendLogin(String name)
 	{
-		sendPacket(new LoginPacket(name));
+		sendPacket(new LoginPacket(GameManager.getInstance().getPlayeGuid(), name));
 	}
 
 	public void sendSay(String message)
 	{
-		sendPacket(new SayPacket(message));
+		sendPacket(new SayPacket(GameManager.getInstance().getPlayeGuid(), message));
 	}
 
 }

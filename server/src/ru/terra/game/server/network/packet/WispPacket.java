@@ -10,16 +10,16 @@ public class WispPacket extends Packet
 	private long target = 0l;
 	private String message = "";
 
-	public WispPacket()
+	public WispPacket(long sender, long target, String message)
 	{
-		setOpCode(Client.CMSG_WISP);
-	}
-
-	public WispPacket(long target, String message)
-	{
-		super();
+		super(Client.CMSG_WISP, sender);
 		this.target = target;
 		this.message = message;
+	}
+
+	public WispPacket(long sender)
+	{
+		super(Client.CMSG_WISP, sender);
 	}
 
 	public String getMessage()

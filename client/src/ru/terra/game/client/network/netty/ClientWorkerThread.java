@@ -4,6 +4,7 @@ import org.jboss.netty.channel.Channel;
 
 import ru.terra.game.client.game.GameManager;
 import ru.terra.game.client.network.packet.Packet;
+import ru.terra.game.client.network.packet.client.SayPacket;
 import ru.terra.game.client.network.packet.server.OkPacket;
 import ru.terra.game.shared.constants.OpCodes.Server;
 
@@ -29,6 +30,10 @@ public class ClientWorkerThread
 			gm.ok((OkPacket) message);
 		}
 			break;
+		case Server.SMSG_SAY:
+		{
+			gm.playerSaid(((SayPacket) message).getSender(), ((SayPacket) message).getMessage());
+		}
 		}
 	}
 }

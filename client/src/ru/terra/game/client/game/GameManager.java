@@ -69,6 +69,11 @@ public class GameManager
 		NetworkManager.getInstance().sendSay(message);
 	}
 
+	public void playerSaid(long guid, String message)
+	{
+		log.info("Player " + guid + " said: " + message);
+	}
+
 	public void ok(OkPacket message)
 	{
 		log.info("ok");
@@ -80,6 +85,11 @@ public class GameManager
 		{
 			setGameState(GameState.READY);
 		}
+	}
+
+	public long getPlayeGuid()
+	{
+		return player != null ? player.getGuid() : 0;
 	}
 
 }
