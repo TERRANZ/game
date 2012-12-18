@@ -1,18 +1,34 @@
 package ru.terra.game.client.entity;
 
-public interface Entity
+public abstract class Entity
 {
-	public void update(EntityManager manager, int delta);
+	private String name;
+	private long guid;
 
-	public void render();
+	public Entity(long guid, String name)
+	{
+		this.guid = guid;
+		this.name = name;
+	}
 
-	public float getSize();
+	public String getName()
+	{
+		return name;
+	}
 
-	public float getX();
+	public void setName(String name)
+	{
+		this.name = name;
+	}
 
-	public float getY();
+	public long getGuid()
+	{
+		return guid;
+	}
 
-	public void onCollide(EntityManager manager, Entity other);
+	public void setGuid(long guid)
+	{
+		this.guid = guid;
+	}
 
-	public boolean isCollides(Entity other);
 }

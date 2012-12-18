@@ -50,13 +50,14 @@ public class GameManager
 	{
 		log.info("player logged in with guid = " + guid);
 		setGameState(GameState.LOGGED_IN);
-		player = new Player(guid);
+		player = new Player(guid, "playername");
 		setGameState(GameState.READY);
 	}
 
 	public void enemyLoggedIn(long guid, String name)
 	{
 		log.info("enemy logged in with guid = " + guid);
+		enemies.add(new Player(guid, name));
 	}
 
 	public void start()
@@ -66,7 +67,8 @@ public class GameManager
 
 	public void sendSay(String message)
 	{
-		NetworkManager.getInstance().sendSay(message);
+		if (getGameState() == GameState.READY)
+			NetworkManager.getInstance().sendSay(message);
 	}
 
 	public void playerSaid(long guid, String message)
@@ -90,6 +92,11 @@ public class GameManager
 	public long getPlayeGuid()
 	{
 		return player != null ? player.getGuid() : 0;
+	}
+
+	public Player getPlayer()
+	{
+		return player;
 	}
 
 }
