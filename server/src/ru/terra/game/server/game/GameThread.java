@@ -9,7 +9,6 @@ import ru.terra.game.server.network.NetworkManager;
 
 public class GameThread implements Runnable
 {
-
 	private GameManager gameManager = GameManager.getGameManager();
 	private boolean isRun = true;
 	private Logger log = Logger.getLogger(GameThread.class);
@@ -24,13 +23,19 @@ public class GameThread implements Runnable
 	@Override
 	public void run()
 	{
+		long lastLoop = getTime();
 		while (isRun)
 		{
+			int delta = (int) (getTime() - lastLoop);
+			lastLoop = getTime();
+
+			gameManager.updateGame(delta);
+
 			Event e = gameManager.getNextEvent();
 			if (e == null)
 				try
 				{
-					Thread.sleep(10);
+					Thread.sleep(1);
 				} catch (InterruptedException e1)
 				{
 					e1.printStackTrace();
@@ -47,5 +52,10 @@ public class GameThread implements Runnable
 				}
 			}
 		}
+	}
+
+	public long getTime()
+	{
+		return System.currentTimeMillis() & 0x7FFFFFFFFFFFFFFFL;
 	}
 }

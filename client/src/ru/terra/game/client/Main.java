@@ -18,7 +18,7 @@ public class Main
 		BasicConfigurator.configure();
 		NetworkManager.getInstance().start();
 		GameManager.getInstance().start();
-		GUIManager.getInstance().start();
+		//GUIManager.getInstance().start();
 		BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
 		String line = "";
 		while (true)

@@ -1,9 +1,11 @@
 package ru.terra.game.server.entity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public abstract class Entity
+public abstract class Entity implements Serializable
 {
+	private static final long serialVersionUID = -2109883228832245234L;
 	private long guid = UUID.randomUUID().getLeastSignificantBits();
 	private float health = 100f;
 	private String name = "";

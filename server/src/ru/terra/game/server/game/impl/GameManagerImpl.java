@@ -9,6 +9,7 @@ import org.jboss.netty.channel.Channel;
 
 import ru.terra.game.server.entity.PlayerEntity;
 import ru.terra.game.server.game.GameManager;
+import ru.terra.game.server.game.GameMap;
 import ru.terra.game.server.game.GameThread;
 import ru.terra.game.server.game.events.Event;
 import ru.terra.game.server.game.events.LoginEvent;
@@ -22,6 +23,7 @@ public class GameManagerImpl extends GameManager
 	private ArrayList<PlayerEntity> players = new ArrayList<>();
 	private HashMap<Long, PlayerEntity> playersMap = new HashMap<>();
 	private Logger log = Logger.getLogger(GameManagerImpl.class);
+	private GameMap gameMap1 = new GameMap();
 
 	private GameManagerImpl()
 	{
@@ -83,6 +85,7 @@ public class GameManagerImpl extends GameManager
 	@Override
 	public void playerWisp(Channel channel, String message, long sender, long target)
 	{
+		log.info("player " + sender + " whisps to " + target + " " + message);
 		addEvent(new WispEvent(channel, message, sender, target));
 	}
 
@@ -104,8 +107,29 @@ public class GameManagerImpl extends GameManager
 	@Override
 	public void removePlayer(long guid)
 	{
+		log.info("removing player with guid: " + guid);
 		PlayerEntity pe = playersMap.get(guid);
 		playersMap.remove(guid);
 		players.remove(pe);
+	}
+
+	@Override
+	public void removePlayer(Channel channel)
+	{
+		log.info("removing player with channel: " + channel.getId());
+		for (PlayerEntity p : players)
+		{
+			if (p.getChannel().equals(channel))
+			{
+				playersMap.remove(p.getGUID());
+				players.remove(p);
+			}
+		}
+	}
+
+	@Override
+	public void updateGame(int delta)
+	{
+		
 	}
 }

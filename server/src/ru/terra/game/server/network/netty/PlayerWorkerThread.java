@@ -23,6 +23,7 @@ public class PlayerWorkerThread
 
 	public void disconnectedFromChannel()
 	{
+		gm.removePlayer(channel);
 	}
 
 	public void acceptPacket(Packet message)
