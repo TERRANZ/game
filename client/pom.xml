@@ -39,6 +39,52 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>com.googlecode.addjars-maven-plugin</groupId>
+				<artifactId>addjars-maven-plugin</artifactId>
+				<version>1.0.2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>add-jars</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/lib</directory>
+									<includes>
+										<include>assets.jar</include>
+										<include>eventbus.jar</include>
+										<include>jbullet.jar</include>
+										<include>jinput.jar</include>
+										<include>jME3-core.jar</include>
+										<include>jME3-desktop.jar</include>
+										<include>jME3-effects.jar</include>
+										<include>jME3-jbullet.jar</include>
+										<include>jME3-jogg.jar</include>
+										<include>jME3-lwjgl.jar</include>
+										<include>jME3-lwjgl-natives.jar</include>
+										<include>jME3-networking.jar</include>
+										<include>jME3-niftygui.jar</include>
+										<include>jME3-plugins.jar</include>
+										<include>jME3-terrain.jar</include>
+										<include>jME3-testdata.jar</include>
+										<include>j-ogg-oggd.jar</include>
+										<include>j-ogg-vorbisd.jar</include>
+										<include>lwjgl.jar</include>
+										<include>nifty-default-controls.jar</include>
+										<include>nifty.jar</include>
+										<include>nifty-style-black.jar</include>
+										<include>stack-alloc.jar</include>
+										<include>vecmath.jar</include>
+										<include>xmlpull-xpp3.jar</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -58,16 +104,6 @@
 			<artifactId>shared</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl.lwjgl</groupId>
-			<artifactId>lwjgl</artifactId>
-			<version>2.8.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.projectdarkstar.ext.org.lwjgl</groupId>
-			<artifactId>lwjgl_util</artifactId>
-			<version>2.0rc2</version>
 		</dependency>
 	</dependencies>
 </project>

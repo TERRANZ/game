@@ -1,7 +1,7 @@
 package ru.terra.game.client.game;
 
 import ru.terra.game.client.entity.Entity;
-import ru.terra.game.client.gui.LWJGLGameViewImpl;
+import ru.terra.game.client.gui.jmonkey.JMonkeyGameView;
 
 public abstract class GameView
 {
@@ -13,6 +13,6 @@ public abstract class GameView
 
 	public static GameView getView()
 	{
-		return new LWJGLGameViewImpl();
+		return new JMonkeyGameView();
 	}
 }
