@@ -205,7 +205,8 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			walkDirection.addLocal(camDir.negate());
 		}
 		player.setWalkDirection(walkDirection);
-		camNode.lookAt(controlCube.getLocalTranslation(), Vector3f.UNIT_Z);
+		//camNode.lookAt(controlCube.getLocalTranslation(), Vector3f.UNIT_Z);
+		camNode.setLocalTranslation(controlCube.getLocalTranslation().setY(currY));
 	}
 
 }
