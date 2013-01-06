@@ -5,6 +5,7 @@ import org.jboss.netty.channel.Channel;
 
 import ru.terra.game.server.entity.PlayerEntity;
 import ru.terra.game.server.game.GameManager;
+import ru.terra.game.server.network.packet.MovementPacket;
 import ru.terra.game.server.network.packet.client.SayPacket;
 import ru.terra.game.server.network.packet.server.OkPacket;
 
@@ -48,6 +49,15 @@ public class NetworkManager
 		{
 			if (playerEntity.getGUID() != playerGUID)
 				playerEntity.getChannel().write(new SayPacket(playerGUID, message));
+		}
+	}
+
+	public void sendPlayerMove(long playerGUID, int direction, float x, float y, float z, float h)
+	{
+		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers())
+		{
+			if (playerEntity.getGUID() != playerGUID)
+				playerEntity.getChannel().write(new MovementPacket(direction, playerGUID, x, y, z, h));
 		}
 	}
 }

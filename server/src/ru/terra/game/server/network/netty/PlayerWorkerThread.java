@@ -3,6 +3,7 @@ package ru.terra.game.server.network.netty;
 import org.jboss.netty.channel.Channel;
 
 import ru.terra.game.server.game.GameManager;
+import ru.terra.game.server.network.packet.MovementPacket;
 import ru.terra.game.server.network.packet.Packet;
 import ru.terra.game.server.network.packet.client.LoginPacket;
 import ru.terra.game.server.network.packet.client.SayPacket;
@@ -44,6 +45,16 @@ public class PlayerWorkerThread
 		{
 			WispPacket p = (WispPacket) message;
 			gm.playerWisp(channel, p.getMessage(), p.getSender(), p.getTarget());
+		}
+			break;
+		case Client.CMSG_MOVE_BACK:
+		case Client.CMSG_MOVE_FORWARD:
+		case Client.CMSG_MOVE_LEFT:
+		case Client.CMSG_MOVE_RIGHT:
+		case Client.CMSG_MOVE_TELEPORT:
+		{
+			MovementPacket p = (MovementPacket) message;
+			gm.updatePlayerPos(channel, p.getSender(), p.getOpCode(), p.getX(), p.getY(), p.getZ(), p.getH());
 		}
 			break;
 		}

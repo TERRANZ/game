@@ -13,6 +13,7 @@ import ru.terra.game.server.game.GameMap;
 import ru.terra.game.server.game.GameThread;
 import ru.terra.game.server.game.events.Event;
 import ru.terra.game.server.game.events.LoginEvent;
+import ru.terra.game.server.game.events.PlayerMoveEvent;
 import ru.terra.game.server.game.events.SayEvent;
 import ru.terra.game.server.game.events.WispEvent;
 
@@ -130,6 +131,13 @@ public class GameManagerImpl extends GameManager
 	@Override
 	public void updateGame(int delta)
 	{
-		
+
+	}
+
+	@Override
+	public void updatePlayerPos(Channel channel, long sender, int direction, float x, float y, float z, float h)
+	{
+		PlayerMoveEvent playerMoveEvent = new PlayerMoveEvent(channel, sender, direction, x, y, z, h);
+		addEvent(playerMoveEvent);
 	}
 }

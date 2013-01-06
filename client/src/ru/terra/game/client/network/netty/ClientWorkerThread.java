@@ -2,7 +2,6 @@ package ru.terra.game.client.network.netty;
 
 import org.jboss.netty.channel.Channel;
 
-import ru.terra.game.client.entity.Player;
 import ru.terra.game.client.game.GameManager;
 import ru.terra.game.client.network.packet.MovementPacket;
 import ru.terra.game.client.network.packet.Packet;

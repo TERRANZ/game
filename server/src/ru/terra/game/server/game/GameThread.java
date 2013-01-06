@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import ru.terra.game.server.game.events.Event;
 import ru.terra.game.server.game.events.LoginEvent;
+import ru.terra.game.server.game.events.PlayerMoveEvent;
 import ru.terra.game.server.game.events.SayEvent;
 import ru.terra.game.server.network.NetworkManager;
 
@@ -49,6 +50,12 @@ public class GameThread implements Runnable
 				else if (e instanceof SayEvent)
 				{
 					NetworkManager.getInstance().sendSay(((SayEvent) e).getSender(), ((SayEvent) e).getMessage());
+				}
+				else if (e instanceof PlayerMoveEvent)
+				{
+					PlayerMoveEvent event = (PlayerMoveEvent) e;
+					NetworkManager.getInstance().sendPlayerMove(event.getSender(), event.getDirection(), event.getX(), event.getY(), event.getZ(),
+							event.getH());
 				}
 			}
 		}

@@ -1,6 +1,5 @@
 package ru.terra.game.client.game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
@@ -10,7 +9,6 @@ import ru.terra.game.client.entity.Player;
 import ru.terra.game.client.network.NetworkManager;
 import ru.terra.game.client.network.packet.MovementPacket;
 import ru.terra.game.client.network.packet.server.OkPacket;
-import ru.terra.game.shared.constants.OpCodes.Client;
 
 public class GameManager
 {

@@ -15,7 +15,7 @@ public abstract class GameManager
 	public abstract PlayerEntity getPlayer(long guid);
 
 	public abstract void removePlayer(long guid);
-	
+
 	public abstract void removePlayer(Channel channel);
 
 	public abstract long playerLoggedIn(Channel channel, String name);
@@ -34,6 +34,8 @@ public abstract class GameManager
 	public abstract Event getNextEvent();
 
 	public abstract void addEvent(Event e);
-	
+
 	public abstract void updateGame(int delta);
+
+	public abstract void updatePlayerPos(Channel channel, long sender, int direction, float x, float y, float z, float h);
 }

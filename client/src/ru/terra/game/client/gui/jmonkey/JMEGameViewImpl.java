@@ -9,7 +9,6 @@ import ru.terra.game.client.game.GameManager;
 import ru.terra.game.shared.constants.OpCodes.Client;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.asset.plugins.ZipLocator;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
