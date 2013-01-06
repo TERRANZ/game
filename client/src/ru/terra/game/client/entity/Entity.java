@@ -4,6 +4,7 @@ public abstract class Entity
 {
 	private String name;
 	private long guid;
+	private float x, y, z, h;
 
 	public Entity(long guid, String name)
 	{
@@ -29,5 +30,53 @@ public abstract class Entity
 	public void setGuid(long guid)
 	{
 		this.guid = guid;
+	}
+
+	public float getX()
+	{
+		return x;
+	}
+
+	public void setX(float x)
+	{
+		this.x = x;
+	}
+
+	public float getY()
+	{
+		return y;
+	}
+
+	public void setY(float y)
+	{
+		this.y = y;
+	}
+
+	public float getZ()
+	{
+		return z;
+	}
+
+	public void setZ(float z)
+	{
+		this.z = z;
+	}
+
+	public float getH()
+	{
+		return h;
+	}
+
+	public void setH(float h)
+	{
+		this.h = h;
+	}
+
+	public void setPosition(float x, float y, float z, float h)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.h = h;
 	}
 }

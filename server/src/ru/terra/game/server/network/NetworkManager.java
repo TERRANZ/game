@@ -5,8 +5,8 @@ import org.jboss.netty.channel.Channel;
 
 import ru.terra.game.server.entity.PlayerEntity;
 import ru.terra.game.server.game.GameManager;
-import ru.terra.game.server.network.packet.OkPacket;
-import ru.terra.game.server.network.packet.SayPacket;
+import ru.terra.game.server.network.packet.client.SayPacket;
+import ru.terra.game.server.network.packet.server.OkPacket;
 
 public class NetworkManager
 {

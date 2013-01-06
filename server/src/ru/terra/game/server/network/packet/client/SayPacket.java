@@ -1,26 +1,25 @@
-package ru.terra.game.server.network.packet;
+package ru.terra.game.server.network.packet.client;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 
+import ru.terra.game.server.network.packet.Packet;
 import ru.terra.game.shared.constants.OpCodes.Client;
 
-public class WispPacket extends Packet
+public class SayPacket extends Packet
 {
 
-	private long target = 0l;
-	private String message = "";
-
-	public WispPacket(long sender, long target, String message)
+	public SayPacket(long sender)
 	{
-		super(Client.CMSG_WISP, sender);
-		this.target = target;
-		this.message = message;
+		super(Client.CMSG_SAY, sender);
 	}
 
-	public WispPacket(long sender)
+	public SayPacket(long sender, String message)
 	{
-		super(Client.CMSG_WISP, sender);
+		super(Client.CMSG_SAY, sender);
+		setMessage(message);
 	}
+
+	private String message;
 
 	public String getMessage()
 	{
@@ -32,16 +31,6 @@ public class WispPacket extends Packet
 		this.message = message;
 	}
 
-	public long getTarget()
-	{
-		return target;
-	}
-
-	public void setTarget(long target)
-	{
-		this.target = target;
-	}
-
 	@Override
 	public void get(ChannelBuffer buffer)
 	{
@@ -50,7 +39,6 @@ public class WispPacket extends Packet
 		for (int i = 0; i < length; ++i)
 			builder.append(buffer.readChar());
 		message = builder.toString();
-		setTarget(buffer.readLong());
 	}
 
 	@Override
@@ -61,7 +49,6 @@ public class WispPacket extends Packet
 		{
 			buffer.writeChar(message.charAt(i));
 		}
-		buffer.writeLong(target);
 	}
 
 }

@@ -1,7 +1,8 @@
-package ru.terra.game.server.network.packet;
+package ru.terra.game.server.network.packet.server;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 
+import ru.terra.game.server.network.packet.Packet;
 import ru.terra.game.shared.constants.OpCodes.Server;
 
 public class OkPacket extends Packet

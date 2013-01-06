@@ -3,10 +3,10 @@ package ru.terra.game.server.network.netty;
 import org.jboss.netty.channel.Channel;
 
 import ru.terra.game.server.game.GameManager;
-import ru.terra.game.server.network.packet.LoginPacket;
 import ru.terra.game.server.network.packet.Packet;
-import ru.terra.game.server.network.packet.SayPacket;
-import ru.terra.game.server.network.packet.WispPacket;
+import ru.terra.game.server.network.packet.client.LoginPacket;
+import ru.terra.game.server.network.packet.client.SayPacket;
+import ru.terra.game.server.network.packet.client.WispPacket;
 import ru.terra.game.shared.constants.OpCodes.Client;
 
 public class PlayerWorkerThread

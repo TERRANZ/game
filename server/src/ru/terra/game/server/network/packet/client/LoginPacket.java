@@ -1,7 +1,8 @@
-package ru.terra.game.server.network.packet;
+package ru.terra.game.server.network.packet.client;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 
+import ru.terra.game.server.network.packet.Packet;
 import ru.terra.game.shared.constants.OpCodes.Client;
 
 public class LoginPacket extends Packet

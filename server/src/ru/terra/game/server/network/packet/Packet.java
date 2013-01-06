@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 
+import ru.terra.game.server.network.packet.client.LoginPacket;
+import ru.terra.game.server.network.packet.client.SayPacket;
+import ru.terra.game.server.network.packet.client.WispPacket;
 import ru.terra.game.shared.constants.OpCodes;
 
 public abstract class Packet

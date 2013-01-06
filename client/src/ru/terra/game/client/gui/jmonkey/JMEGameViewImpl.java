@@ -1,5 +1,13 @@
 package ru.terra.game.client.gui.jmonkey;
 
+import java.util.HashMap;
+
+import ru.terra.game.client.entity.Entity;
+import ru.terra.game.client.entity.MapObject;
+import ru.terra.game.client.entity.Player;
+import ru.terra.game.client.game.GameManager;
+import ru.terra.game.shared.constants.OpCodes.Client;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ZipLocator;
 import com.jme3.bullet.BulletAppState;
@@ -22,6 +30,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Sphere;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 
 public class JMEGameViewImpl extends SimpleApplication implements ActionListener
@@ -40,6 +49,11 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 	private CameraNode camNode;
 	private float diffY = 50;
 	private Geometry controlCube;
+
+	private HashMap<Player, Geometry> players = new HashMap<Player, Geometry>();
+	private HashMap<MapObject, Geometry> mapObjects = new HashMap<MapObject, Geometry>();
+	private HashMap<Long, Geometry> entities = new HashMap<>();
+	private Material mat1;
 
 	public void simpleInitApp()
 	{
@@ -87,7 +101,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 
 		Box b = new Box(5, 5, 5);
 		controlCube = new Geometry("Box", b);
-		Material mat1 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+		mat1 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		controlCube.setMaterial(mat1);
 		controlCube.setLocalTranslation(10, 10, 10);
 		rootNode.attachChild(controlCube);
@@ -188,25 +202,70 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		Vector3f camDir = cam.getUp().clone().multLocal(0.4f);
 		Vector3f camLeft = cam.getLeft().clone().multLocal(0.4f);
 		walkDirection.set(0, 0, 0);
+		int direction = 0;
+		Vector3f dir = new Vector3f(0, 0, 0);
 		if (left)
 		{
-			walkDirection.addLocal(camLeft);
+			dir = camLeft;
+			walkDirection.addLocal(dir);
+			direction = Client.CMSG_MOVE_LEFT;
 		}
 		if (right)
 		{
-			walkDirection.addLocal(camLeft.negate());
+			dir = camLeft.negate();
+			walkDirection.addLocal(dir);
+			direction = Client.CMSG_MOVE_RIGHT;
 		}
 		if (up)
 		{
-			walkDirection.addLocal(camDir);
+			dir = camDir;
+			walkDirection.addLocal(dir);
+			direction = Client.CMSG_MOVE_FORWARD;
 		}
 		if (down)
 		{
-			walkDirection.addLocal(camDir.negate());
+			dir = camDir.negate();
+			walkDirection.addLocal(dir);
+			direction = Client.CMSG_MOVE_BACK;
 		}
 		player.setWalkDirection(walkDirection);
-		//camNode.lookAt(controlCube.getLocalTranslation(), Vector3f.UNIT_Z);
+		// camNode.lookAt(controlCube.getLocalTranslation(), Vector3f.UNIT_Z);
 		camNode.setLocalTranslation(controlCube.getLocalTranslation().setY(currY));
+		GameManager.getInstance().sendPlayerMove(direction, dir.getX(), dir.getY(), dir.getZ(), 0);
 	}
 
+	public void loadPlayer()
+	{
+	}
+
+	public void addMapObject(MapObject entity)
+	{
+		Box b = new Box(2, 2, 2);
+		Geometry g = new Geometry("Box", b);
+		g.setMaterial(mat1);
+		g.setLocalTranslation(entity.getX(), entity.getY(), entity.getZ());
+		rootNode.attachChild(g);
+		mapObjects.put(entity, g);
+		entities.put(entity.getGuid(), g);
+	}
+
+	public void enemyLoggedIn(Player enemy)
+	{
+		Sphere s = new Sphere(10, 10, 5);
+		Geometry g = new Geometry("Sphere", s);
+		g.setMaterial(mat1);
+		g.setLocalTranslation(enemy.getX(), enemy.getY(), enemy.getZ());
+		rootNode.attachChild(g);
+		players.put(enemy, g);
+		entities.put(enemy.getGuid(), g);
+	}
+
+	public void updateEntityPosition(Entity entity)
+	{
+		Geometry g = entities.get(entity.getGuid());
+		if (g != null)
+		{
+			g.setLocalTranslation(entity.getX(), entity.getY(), entity.getZ());
+		}
+	}
 }

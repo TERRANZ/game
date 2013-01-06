@@ -1,6 +1,8 @@
 package ru.terra.game.client.game;
 
 import ru.terra.game.client.entity.Entity;
+import ru.terra.game.client.entity.MapObject;
+import ru.terra.game.client.entity.Player;
 import ru.terra.game.client.gui.jmonkey.JMonkeyGameView;
 
 public abstract class GameView
@@ -9,10 +11,14 @@ public abstract class GameView
 
 	public abstract void loadPlayer();
 
-	public abstract void loadObject(Entity entity);
+	public abstract void addMapObject(MapObject entity);
 
 	public static GameView getView()
 	{
 		return new JMonkeyGameView();
 	}
+
+	public abstract void enemyLoggedIn(Player enemy);
+
+	public abstract void updateEntityPosition(Entity entity);
 }

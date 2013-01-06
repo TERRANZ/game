@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 
+import ru.terra.game.client.entity.Entity;
 import ru.terra.game.client.network.packet.client.SayPacket;
 import ru.terra.game.client.network.packet.server.OkPacket;
 import ru.terra.game.shared.constants.OpCodes;
@@ -75,4 +76,16 @@ public abstract class Packet
 	public abstract void get(ChannelBuffer buffer);
 
 	public abstract void send(ChannelBuffer buffer);
+
+	protected void readEntityPosition(Entity entity, ChannelBuffer buffer)
+	{
+		if (entity != null)
+		{
+			float x = buffer.readFloat();
+			float y = buffer.readFloat();
+			float z = buffer.readFloat();
+			float h = buffer.readFloat();
+			entity.setPosition(x, y, z, h);
+		}
+	}
 }

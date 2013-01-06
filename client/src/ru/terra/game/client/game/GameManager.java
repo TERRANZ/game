@@ -1,21 +1,25 @@
 package ru.terra.game.client.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
+import ru.terra.game.client.entity.MapObject;
 import ru.terra.game.client.entity.Player;
 import ru.terra.game.client.network.NetworkManager;
+import ru.terra.game.client.network.packet.MovementPacket;
 import ru.terra.game.client.network.packet.server.OkPacket;
+import ru.terra.game.shared.constants.OpCodes.Client;
 
 public class GameManager
 {
 	private Logger log = Logger.getLogger(GameManager.class);
 	private Player player;
-
-	private ArrayList<Player> enemies = new ArrayList<>();
-
+	private HashMap<Long, Player> enemies = new HashMap<Long, Player>();
+	private HashMap<Long, MapObject> mapObjects = new HashMap<Long, MapObject>();
 	private GameState gameState;
+	private NetworkManager nm = NetworkManager.getInstance();
 
 	private GameManager()
 	{
@@ -43,7 +47,7 @@ public class GameManager
 	{
 		log.info("login");
 		setGameState(GameState.LOGGING_IN);
-		NetworkManager.getInstance().sendLogin("TERRANZ");
+		nm.sendLogin("TERRANZ");
 	}
 
 	public void playerLoggedIn(long guid)
@@ -54,10 +58,16 @@ public class GameManager
 		setGameState(GameState.READY);
 	}
 
-	public void enemyLoggedIn(long guid, String name)
+	public void enemyLoggedIn(Player player)
 	{
-		log.info("enemy logged in with guid = " + guid);
-		enemies.add(new Player(guid, name));
+		log.info("enemy logged in with guid = " + player.getGuid());
+		enemies.put(player.getGuid(), player);
+	}
+
+	public void enemyLoggedOut(long guid)
+	{
+		log.info("enemy " + guid + " logged out");
+		enemies.remove(guid);
 	}
 
 	public void start()
@@ -68,7 +78,7 @@ public class GameManager
 	public void sendSay(String message)
 	{
 		if (getGameState() == GameState.READY)
-			NetworkManager.getInstance().sendSay(message);
+			nm.sendSay(message);
 	}
 
 	public void playerSaid(long guid, String message)
@@ -99,4 +109,22 @@ public class GameManager
 		return player;
 	}
 
+	public void entityMoved(long guid, float x, float y, float z, float h)
+	{
+		Player enemy = enemies.get(guid);
+		enemy.setPosition(x, y, z, h);
+		GameView.getView().updateEntityPosition(enemy);
+	}
+
+	public void sendPlayerMove(int direction, float x, float y, float z, float h)
+	{
+		MovementPacket movementPacket = new MovementPacket(direction, getPlayeGuid(), x, y, z, h);
+		nm.sendMove(movementPacket);
+	}
+
+	public void entityAdd(MapObject mapObject)
+	{
+		mapObjects.put(mapObject.getGuid(), mapObject);
+		GameView.getView().addMapObject(mapObject);
+	}
 }

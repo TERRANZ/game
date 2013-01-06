@@ -3,6 +3,7 @@ package ru.terra.game.client.network;
 import org.jboss.netty.channel.Channel;
 
 import ru.terra.game.client.game.GameManager;
+import ru.terra.game.client.network.packet.MovementPacket;
 import ru.terra.game.client.network.packet.Packet;
 import ru.terra.game.client.network.packet.client.LoginPacket;
 import ru.terra.game.client.network.packet.client.SayPacket;
@@ -53,4 +54,8 @@ public class NetworkManager
 		sendPacket(new SayPacket(GameManager.getInstance().getPlayeGuid(), message));
 	}
 
+	public void sendMove(MovementPacket movementPacket)
+	{
+		sendPacket(movementPacket);
+	}
 }

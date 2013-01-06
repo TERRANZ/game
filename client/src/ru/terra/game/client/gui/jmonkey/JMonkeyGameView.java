@@ -1,24 +1,42 @@
 package ru.terra.game.client.gui.jmonkey;
 
 import ru.terra.game.client.entity.Entity;
+import ru.terra.game.client.entity.MapObject;
+import ru.terra.game.client.entity.Player;
 import ru.terra.game.client.game.GameView;
 
 public class JMonkeyGameView extends GameView
 {
+	private JMEGameViewImpl jmeGameViewImpl;
+
 	@Override
 	public void init()
 	{
-		JMEGameViewImpl jmeGameViewImpl = new JMEGameViewImpl();
+		jmeGameViewImpl = new JMEGameViewImpl();
 		jmeGameViewImpl.start();
 	}
 
 	@Override
 	public void loadPlayer()
 	{
+		jmeGameViewImpl.loadPlayer();
 	}
 
 	@Override
-	public void loadObject(Entity entity)
+	public void addMapObject(MapObject entity)
 	{
+		jmeGameViewImpl.addMapObject(entity);
+	}
+
+	@Override
+	public void enemyLoggedIn(Player enemy)
+	{
+		jmeGameViewImpl.enemyLoggedIn(enemy);
+	}
+
+	@Override
+	public void updateEntityPosition(Entity entity)
+	{
+		jmeGameViewImpl.updateEntityPosition(entity);
 	}
 }
