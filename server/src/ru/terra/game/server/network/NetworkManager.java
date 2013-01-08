@@ -9,6 +9,7 @@ import ru.terra.game.server.network.packet.MovementPacket;
 import ru.terra.game.server.network.packet.client.LoginPacket;
 import ru.terra.game.server.network.packet.client.SayPacket;
 import ru.terra.game.server.network.packet.server.OkPacket;
+import ru.terra.game.server.network.packet.server.PlayerInGamePacket;
 import ru.terra.game.server.network.packet.server.PlayerLoggedInPacket;
 import ru.terra.game.server.storage.StorageImpl;
 import ru.terra.game.server.storage.StorageManager;
@@ -41,8 +42,12 @@ public class NetworkManager
 		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers())
 		{
 			if (playerEntity.getGUID() != player.getGUID())
+			{
 				playerEntity.getChannel().write(new PlayerLoggedInPacket(player.getGUID(), player));
+				channel.write(new PlayerInGamePacket(playerEntity.getGUID(), playerEntity));
+			}
 		}
+
 	}
 
 	public void sendOk(PlayerEntity playerEntity)

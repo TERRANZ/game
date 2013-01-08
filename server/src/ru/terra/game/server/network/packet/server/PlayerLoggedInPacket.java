@@ -24,11 +24,7 @@ public class PlayerLoggedInPacket extends Packet
 	@Override
 	public void send(ChannelBuffer buffer)
 	{
-		buffer.writeShort(player.getName().length());
-		for (int i = 0; i < player.getName().length(); ++i)
-		{
-			buffer.writeChar(player.getName().charAt(i));
-		}
+		writeString(buffer, player.getName());
 		buffer.writeFloat(player.getX());
 		buffer.writeFloat(player.getY());
 		buffer.writeFloat(player.getZ());

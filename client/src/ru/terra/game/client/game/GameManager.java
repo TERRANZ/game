@@ -43,9 +43,12 @@ public class GameManager
 
 	public void login()
 	{
-		log.info("login");
-		setGameState(GameState.LOGGING_IN);
-		nm.sendLogin("TERRANZ");
+		if (gameState == GameState.INIT)
+		{
+			log.info("login");
+			setGameState(GameState.LOGGING_IN);
+			nm.sendLogin("TERRANZ");
+		}
 	}
 
 	public void playerLoggedIn(long guid)
@@ -59,6 +62,13 @@ public class GameManager
 	public void enemyLoggedIn(Player player)
 	{
 		log.info("enemy logged in with guid = " + player.getGuid());
+		enemies.put(player.getGuid(), player);
+		GameView.getView().enemyLoggedIn(player);
+	}
+
+	public void enemyAlreadyInGame(Player player)
+	{
+		log.info("enemy already in game with guid = " + player.getGuid());
 		enemies.put(player.getGuid(), player);
 		GameView.getView().enemyLoggedIn(player);
 	}

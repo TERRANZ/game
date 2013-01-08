@@ -85,4 +85,21 @@ public abstract class Packet
 	public abstract void get(ChannelBuffer buffer);
 
 	public abstract void send(ChannelBuffer buffer);
+
+	protected void writeString(ChannelBuffer buffer, String text)
+	{
+		buffer.writeShort(text.length());
+		for (int i = 0; i < text.length(); ++i)
+		{
+			buffer.writeChar(text.charAt(i));
+		}
+	}
+
+	protected void writePosition(ChannelBuffer buffer, float x, float y, float z, float h)
+	{
+		buffer.writeFloat(x);
+		buffer.writeFloat(y);
+		buffer.writeFloat(z);
+		buffer.writeFloat(h);
+	}
 }

@@ -28,5 +28,6 @@ public interface OpCodes
 		public static final int SMSG_MOVE_UNROOT = 508;
 		public static final int SMSG_MAPOBJECT_ADD = 509;
 		public static final int SMSG_ENTITY_DEL = 510;
+		public static final int SMSG_PLAYER_IN_GAME = 511;
 	}
 }

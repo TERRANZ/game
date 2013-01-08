@@ -1,8 +1,10 @@
 package ru.terra.game.server.game.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
@@ -23,7 +25,7 @@ public class GameManagerImpl extends GameManager
 {
 	private static GameManagerImpl instance = new GameManagerImpl();
 	private LinkedList<Event> events = new LinkedList<>();
-	private ArrayList<PlayerEntity> players = new ArrayList<>();
+	private List<PlayerEntity> players = Collections.synchronizedList(new ArrayList<PlayerEntity>());
 	private HashMap<Long, PlayerEntity> playersMap = new HashMap<>();
 	private Logger log = Logger.getLogger(GameManagerImpl.class);
 	private GameMap gameMap1 = new GameMap();
@@ -108,7 +110,7 @@ public class GameManagerImpl extends GameManager
 	}
 
 	@Override
-	public PlayerEntity getPlayer(long guid)
+	public synchronized PlayerEntity getPlayer(long guid)
 	{
 		return playersMap.get(guid);
 	}
@@ -117,21 +119,31 @@ public class GameManagerImpl extends GameManager
 	public void removePlayer(long guid)
 	{
 		log.info("removing player with guid: " + guid);
-		PlayerEntity pe = playersMap.get(guid);
-		playersMap.remove(guid);
-		players.remove(pe);
+		synchronized (playersMap)
+		{
+			PlayerEntity pe = playersMap.get(guid);
+			playersMap.remove(guid);
+			synchronized (players)
+			{
+				players.remove(pe);
+			}
+		}
 	}
 
 	@Override
 	public void removePlayer(Channel channel)
 	{
 		log.info("removing player with channel: " + channel.getId());
-		for (PlayerEntity p : players)
+		synchronized (players)
 		{
-			if (p.getChannel().equals(channel))
+			for (PlayerEntity p : players)
 			{
-				playersMap.remove(p.getGUID());
-				players.remove(p);
+				if (p.getChannel().equals(channel))
+				{
+					playersMap.remove(p.getGUID());
+					players.remove(p);
+					break;
+				}
 			}
 		}
 	}

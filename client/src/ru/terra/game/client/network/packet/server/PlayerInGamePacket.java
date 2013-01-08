@@ -6,14 +6,14 @@ import ru.terra.game.client.entity.Player;
 import ru.terra.game.client.network.packet.Packet;
 import ru.terra.game.shared.constants.OpCodes.Server;
 
-public class PlayerLoggedInPacket extends Packet
+public class PlayerInGamePacket extends Packet
 {
 
 	private Player enemy;
 
-	public PlayerLoggedInPacket(long sender)
+	public PlayerInGamePacket(long sender)
 	{
-		super(Server.SMSG_PLAYER_LOGGED_IN, sender);
+		super(Server.SMSG_PLAYER_IN_GAME, sender);
 	}
 
 	@Override
@@ -32,4 +32,5 @@ public class PlayerLoggedInPacket extends Packet
 	{
 		return enemy;
 	}
+
 }

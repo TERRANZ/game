@@ -19,19 +19,19 @@ public class Main
 		NetworkManager.getInstance().start();
 		GameManager.getInstance().start();
 		GUIManager.getInstance().start();
-		BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-		String line = "";
-		while (true)
-		{
-			line = keyboard.readLine();
-			if ("login".equals(line))
-			{
-				GameManager.getInstance().login();
-			}
-			else
-			{
-				GameManager.getInstance().sendSay(line);
-			}
-		}
+		// BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
+		// String line = "";
+		// while (true)
+		// {
+		// line = keyboard.readLine();
+		// if ("login".equals(line))
+		// {
+		//
+		// }
+		// else
+		// {
+		// GameManager.getInstance().sendSay(line);
+		// }
+		// }
 	}
 }

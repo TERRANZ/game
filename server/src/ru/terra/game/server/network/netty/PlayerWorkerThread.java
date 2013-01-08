@@ -52,6 +52,7 @@ public class PlayerWorkerThread
 		case Client.CMSG_MOVE_LEFT:
 		case Client.CMSG_MOVE_RIGHT:
 		case Client.CMSG_MOVE_TELEPORT:
+		case Client.CMSG_MOVE_STOP:
 		{
 			MovementPacket p = (MovementPacket) message;
 			gm.updatePlayerPos(channel, p.getSender(), p.getOpCode(), p.getX(), p.getY(), p.getZ(), p.getH());

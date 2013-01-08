@@ -8,6 +8,7 @@ import ru.terra.game.client.entity.Entity;
 import ru.terra.game.client.network.packet.client.LoginPacket;
 import ru.terra.game.client.network.packet.client.SayPacket;
 import ru.terra.game.client.network.packet.server.OkPacket;
+import ru.terra.game.client.network.packet.server.PlayerInGamePacket;
 import ru.terra.game.client.network.packet.server.PlayerLoggedInPacket;
 import ru.terra.game.shared.constants.OpCodes;
 import ru.terra.game.shared.constants.OpCodes.Client;
@@ -61,6 +62,8 @@ public abstract class Packet
 		case Client.CMSG_MOVE_TELEPORT:
 		case Client.CMSG_MOVE_STOP:
 			return new MovementPacket(opCode, sender);
+		case Server.SMSG_PLAYER_IN_GAME:
+			return new PlayerInGamePacket(sender);
 		}
 		return null;
 	}
@@ -100,5 +103,14 @@ public abstract class Packet
 			float h = buffer.readFloat();
 			entity.setPosition(x, y, z, h);
 		}
+	}
+
+	protected String readString(ChannelBuffer buffer)
+	{
+		int length = buffer.readShort();
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < length; ++i)
+			builder.append(buffer.readChar());
+		return builder.toString();
 	}
 }

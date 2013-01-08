@@ -8,6 +8,7 @@ import ru.terra.game.client.network.packet.Packet;
 import ru.terra.game.client.network.packet.client.SayPacket;
 import ru.terra.game.client.network.packet.server.MapObjectAddPacket;
 import ru.terra.game.client.network.packet.server.OkPacket;
+import ru.terra.game.client.network.packet.server.PlayerInGamePacket;
 import ru.terra.game.client.network.packet.server.PlayerLoggedInPacket;
 import ru.terra.game.shared.constants.OpCodes.Client;
 import ru.terra.game.shared.constants.OpCodes.Server;
@@ -44,6 +45,11 @@ public class ClientWorkerThread
 			gm.enemyLoggedIn(((PlayerLoggedInPacket) packet).getEnemy());
 		}
 			break;
+		case Server.SMSG_PLAYER_IN_GAME:
+		{
+			gm.enemyLoggedIn(((PlayerInGamePacket) packet).getEnemy());
+		}
+			break;
 		case Server.SMSG_MAPOBJECT_ADD:
 		{
 			gm.entityAdd(((MapObjectAddPacket) (packet)).getMapObject());
@@ -57,6 +63,12 @@ public class ClientWorkerThread
 			MovementPacket movementPacket = (MovementPacket) packet;
 			gm.entityVectorMoving(movementPacket.getSender(), movementPacket.getX(), movementPacket.getY(), movementPacket.getZ(),
 					movementPacket.getH());
+		}
+			break;
+		case Client.CMSG_MOVE_STOP:
+		{
+			MovementPacket movementPacket = (MovementPacket) packet;
+			gm.entityVectorMoving(movementPacket.getSender(), 0, 0, 0, movementPacket.getH());
 		}
 			break;
 		case Client.CMSG_MOVE_TELEPORT:

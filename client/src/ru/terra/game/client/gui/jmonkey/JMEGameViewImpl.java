@@ -2,6 +2,8 @@ package ru.terra.game.client.gui.jmonkey;
 
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 import ru.terra.game.client.entity.Entity;
 import ru.terra.game.client.entity.MapObject;
 import ru.terra.game.client.entity.Player;
@@ -62,7 +64,6 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		/**
 		 * Set up Physics
 		 */
-		GameManager.getInstance().login();
 		bulletAppState = new BulletAppState();
 		stateManager.attach(bulletAppState);
 		// bulletAppState.getPhysicsSpace().enableDebug(assetManager);
@@ -116,6 +117,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		// Attach the camNode to the target:
 		rootNode.attachChild(camNode);
 		controlCube.addControl(player);
+		GameManager.getInstance().login();
 	}
 
 	private CharacterControl addCharacterControl()
@@ -124,7 +126,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		// player.setJumpSpeed(20);
 		// player.setFallSpeed(30);
 		ret.setGravity(30);
-		ret.setPhysicsLocation(new Vector3f(0, 10, 0));
+		ret.setPhysicsLocation(new Vector3f(10, 10, 0));
 		bulletAppState.getPhysicsSpace().add(ret);
 		return ret;
 	}
@@ -218,7 +220,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			dir = camLeft;
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_LEFT;
-			updatePlayerPos(dir, direction);
+			sendPlayerMovingVector(dir, direction);
 			isMoving = true;
 		}
 		if (right)
@@ -226,7 +228,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			dir = camLeft.negate();
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_RIGHT;
-			updatePlayerPos(dir, direction);
+			sendPlayerMovingVector(dir, direction);
 			isMoving = true;
 		}
 		if (up)
@@ -234,7 +236,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			dir = camDir;
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_FORWARD;
-			updatePlayerPos(dir, direction);
+			sendPlayerMovingVector(dir, direction);
 			isMoving = true;
 		}
 		if (down)
@@ -242,20 +244,21 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			dir = camDir.negate();
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_BACK;
-			updatePlayerPos(dir, direction);
+			sendPlayerMovingVector(dir, direction);
 			isMoving = true;
 		}
 		player.setWalkDirection(walkDirection);
 		// camNode.lookAt(controlCube.getLocalTranslation(), Vector3f.UNIT_Z);
 		if (isMoving)
 		{
-			GameManager.getInstance().sendPlayerMove(Client.CMSG_MOVE_STOP, 0, 0, 0, 0);
+			// GameManager.getInstance().sendPlayerMove(Client.CMSG_MOVE_STOP, 0, 0, 0, 0);
+			// Logger.getLogger(getClass()).info("sending STOP");
 			isMoving = false;
 		}
 
 	}
 
-	private void updatePlayerPos(Vector3f dir, int direction)
+	private void sendPlayerMovingVector(Vector3f dir, int direction)
 	{
 		camNode.setLocalTranslation(controlCube.getLocalTranslation().setY(currY));
 		GameManager.getInstance().sendPlayerMove(direction, dir.getX(), dir.getY(), dir.getZ(), 0);
@@ -280,8 +283,9 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 	{
 		Sphere s = new Sphere(10, 10, 5);
 		Geometry g = new Geometry("Sphere", s);
-		g.setMaterial(mat1);
-		g.setLocalTranslation(enemy.getX(), enemy.getY(), enemy.getZ());
+		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+		g.setMaterial(mat);
+		g.setLocalTranslation(enemy.getX() + 10, enemy.getY() + 10, enemy.getZ() + 10);
 		rootNode.attachChild(g);
 		players.put(enemy, g);
 		entities.put(enemy.getGuid(), g);
@@ -302,6 +306,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 	public void entityVectorMove(Long guid, float x, float y, float z, float h)
 	{
 		CharacterControl control = playerControls.get(guid);
+		Logger.getLogger(getClass()).info("guid " + guid + " moving " + " x = " + x + " y = " + y + " z = " + z);
 		if (control != null)
 		{
 			Vector3f dir = new Vector3f();
