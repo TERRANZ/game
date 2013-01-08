@@ -60,6 +60,7 @@ public class GameManager
 	{
 		log.info("enemy logged in with guid = " + player.getGuid());
 		enemies.put(player.getGuid(), player);
+		GameView.getView().enemyLoggedIn(player);
 	}
 
 	public void enemyLoggedOut(long guid)
@@ -107,7 +108,13 @@ public class GameManager
 		return player;
 	}
 
-	public void entityMoved(long guid, float x, float y, float z, float h)
+	public void entityVectorMoving(long guid, float x, float y, float z, float h)
+	{
+		Player enemy = enemies.get(guid);
+		GameView.getView().entityVectorMove(enemy, x, y, z, h);
+	}
+
+	public void setEntityPosition(long guid, float x, float y, float z, float h)
 	{
 		Player enemy = enemies.get(guid);
 		enemy.setPosition(x, y, z, h);

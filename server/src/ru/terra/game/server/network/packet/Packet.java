@@ -8,6 +8,7 @@ import ru.terra.game.server.network.packet.client.LoginPacket;
 import ru.terra.game.server.network.packet.client.SayPacket;
 import ru.terra.game.server.network.packet.client.WispPacket;
 import ru.terra.game.shared.constants.OpCodes;
+import ru.terra.game.shared.constants.OpCodes.Client;
 
 public abstract class Packet
 {
@@ -50,6 +51,13 @@ public abstract class Packet
 			return new SayPacket(sender);
 		case OpCodes.Client.CMSG_WISP:
 			return new WispPacket(sender);
+		case Client.CMSG_MOVE_BACK:
+		case Client.CMSG_MOVE_FORWARD:
+		case Client.CMSG_MOVE_LEFT:
+		case Client.CMSG_MOVE_RIGHT:
+		case Client.CMSG_MOVE_TELEPORT:
+		case Client.CMSG_MOVE_STOP:
+			return new MovementPacket(opCode, sender);
 		}
 		return null;
 	}

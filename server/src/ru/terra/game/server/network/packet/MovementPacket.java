@@ -10,6 +10,11 @@ public class MovementPacket extends Packet
 	private float x;
 	private float h;
 
+	public MovementPacket(int opCode, long sender)
+	{
+		super(opCode, sender);
+	}
+
 	public MovementPacket(int opCode, long sender, float x, float y, float z, float h)
 	{
 		super(opCode, sender);

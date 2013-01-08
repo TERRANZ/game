@@ -5,9 +5,11 @@ import ru.terra.game.server.game.GameMap;
 
 public interface Storage
 {
+	public void load();
+
 	public void savePlayer(PlayerEntity player);
 
-	public PlayerEntity loadPlayer(long id);
+	public PlayerEntity loadPlayer(long uid);
 
 	public void saveMap(GameMap map);
 

@@ -5,9 +5,13 @@ import java.io.IOException;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 import ru.terra.game.client.entity.Entity;
+import ru.terra.game.client.network.packet.client.LoginPacket;
 import ru.terra.game.client.network.packet.client.SayPacket;
 import ru.terra.game.client.network.packet.server.OkPacket;
+import ru.terra.game.client.network.packet.server.PlayerLoggedInPacket;
 import ru.terra.game.shared.constants.OpCodes;
+import ru.terra.game.shared.constants.OpCodes.Client;
+import ru.terra.game.shared.constants.OpCodes.Server;
 
 public abstract class Packet
 {
@@ -48,6 +52,15 @@ public abstract class Packet
 			return new OkPacket(sender);
 		case OpCodes.Server.SMSG_SAY:
 			return new SayPacket(sender);
+		case Server.SMSG_PLAYER_LOGGED_IN:
+			return new PlayerLoggedInPacket(sender);
+		case Client.CMSG_MOVE_BACK:
+		case Client.CMSG_MOVE_FORWARD:
+		case Client.CMSG_MOVE_LEFT:
+		case Client.CMSG_MOVE_RIGHT:
+		case Client.CMSG_MOVE_TELEPORT:
+		case Client.CMSG_MOVE_STOP:
+			return new MovementPacket(opCode, sender);
 		}
 		return null;
 	}

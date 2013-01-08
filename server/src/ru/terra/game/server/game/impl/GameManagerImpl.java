@@ -137,6 +137,7 @@ public class GameManagerImpl extends GameManager
 	@Override
 	public void updatePlayerPos(Channel channel, long sender, int direction, float x, float y, float z, float h)
 	{
+		log.info("player =" + sender + " moving x = " + x + " y = " + y + " z = " + z);
 		PlayerMoveEvent playerMoveEvent = new PlayerMoveEvent(channel, sender, direction, x, y, z, h);
 		addEvent(playerMoveEvent);
 	}

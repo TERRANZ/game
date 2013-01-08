@@ -1,13 +1,8 @@
-package ru.terra.game.client.entity;
+package ru.terra.game.server.entity;
 
 public class MapObject extends Entity
 {
 	private long model;
-
-	public MapObject(long guid, String name)
-	{
-		super(guid, name);
-	}
 
 	public long getModel()
 	{

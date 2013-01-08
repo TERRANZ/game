@@ -45,7 +45,7 @@ public class GameThread implements Runnable
 			{
 				if (e instanceof LoginEvent)
 				{
-					NetworkManager.getInstance().sendLoginOk(e.getChannel(), e.getSender());
+					NetworkManager.getInstance().sendLoginOk(e.getChannel(), e.getSender(), ((LoginEvent) e).getName());
 				}
 				else if (e instanceof SayEvent)
 				{

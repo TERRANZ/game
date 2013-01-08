@@ -11,7 +11,8 @@ public abstract class Entity implements Serializable
 	private String name = "";
 	private float x = 0f;
 	private float y = 0f;
-	private int rotation = 0;
+	private float z = 0f;
+	private float h = 0f;
 
 	public long getGUID()
 	{
@@ -58,13 +59,23 @@ public abstract class Entity implements Serializable
 		this.y = y;
 	}
 
-	public int getRotation()
+	public float getZ()
 	{
-		return rotation;
+		return z;
 	}
 
-	public void setRotation(int rotation)
+	public void setZ(float z)
 	{
-		this.rotation = rotation;
+		this.z = z;
+	}
+
+	public float getH()
+	{
+		return h;
+	}
+
+	public void setH(float h)
+	{
+		this.h = h;
 	}
 }

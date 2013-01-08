@@ -21,4 +21,6 @@ public abstract class GameView
 	public abstract void enemyLoggedIn(Player enemy);
 
 	public abstract void updateEntityPosition(Entity entity);
+
+	public abstract void entityVectorMove(Entity entity, float x, float y, float z, float h);
 }

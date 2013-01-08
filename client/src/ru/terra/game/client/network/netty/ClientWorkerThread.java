@@ -53,14 +53,20 @@ public class ClientWorkerThread
 		case Client.CMSG_MOVE_FORWARD:
 		case Client.CMSG_MOVE_LEFT:
 		case Client.CMSG_MOVE_RIGHT:
+		{
+			MovementPacket movementPacket = (MovementPacket) packet;
+			gm.entityVectorMoving(movementPacket.getSender(), movementPacket.getX(), movementPacket.getY(), movementPacket.getZ(),
+					movementPacket.getH());
+		}
+			break;
 		case Client.CMSG_MOVE_TELEPORT:
 		case Server.SMSG_MOVE_HEARTBEAT:
 		{
 			MovementPacket movementPacket = (MovementPacket) packet;
-			gm.entityMoved(movementPacket.getSender(), movementPacket.getX(), movementPacket.getY(), movementPacket.getZ(), movementPacket.getH());
+			gm.setEntityPosition(movementPacket.getSender(), movementPacket.getX(), movementPacket.getY(), movementPacket.getZ(),
+					movementPacket.getH());
 		}
 			break;
-
 		}
 	}
 }

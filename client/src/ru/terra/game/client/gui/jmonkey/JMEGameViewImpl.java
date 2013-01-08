@@ -49,16 +49,20 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 	private float diffY = 50;
 	private Geometry controlCube;
 
-	private HashMap<Player, Geometry> players = new HashMap<Player, Geometry>();
-	private HashMap<MapObject, Geometry> mapObjects = new HashMap<MapObject, Geometry>();
+	private HashMap<Player, Geometry> players = new HashMap<>();
+	private HashMap<MapObject, Geometry> mapObjects = new HashMap<>();
 	private HashMap<Long, Geometry> entities = new HashMap<>();
+	private HashMap<Long, CharacterControl> playerControls = new HashMap<>();
 	private Material mat1;
+	private boolean isMoving = false;
+	private CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
 
 	public void simpleInitApp()
 	{
 		/**
 		 * Set up Physics
 		 */
+		GameManager.getInstance().login();
 		bulletAppState = new BulletAppState();
 		stateManager.attach(bulletAppState);
 		// bulletAppState.getPhysicsSpace().enableDebug(assetManager);
@@ -85,18 +89,13 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		// The CharacterControl offers extra settings for
 		// size, stepheight, jumping, falling, and gravity.
 		// We also put the player in its starting position.
-		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
-		player = new CharacterControl(capsuleShape, 0.05f);
-		// player.setJumpSpeed(20);
-		// player.setFallSpeed(30);
-		player.setGravity(30);
-		player.setPhysicsLocation(new Vector3f(0, 10, 0));
 
 		// We attach the scene and the player to the rootNode and the physics space,
 		// to make them appear in the game world.
 		rootNode.attachChild(sceneModel);
 		bulletAppState.getPhysicsSpace().add(landscape);
-		bulletAppState.getPhysicsSpace().add(player);
+
+		player = addCharacterControl();
 
 		Box b = new Box(5, 5, 5);
 		controlCube = new Geometry("Box", b);
@@ -117,6 +116,17 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		// Attach the camNode to the target:
 		rootNode.attachChild(camNode);
 		controlCube.addControl(player);
+	}
+
+	private CharacterControl addCharacterControl()
+	{
+		CharacterControl ret = new CharacterControl(capsuleShape, 0.05f);
+		// player.setJumpSpeed(20);
+		// player.setFallSpeed(30);
+		ret.setGravity(30);
+		ret.setPhysicsLocation(new Vector3f(0, 10, 0));
+		bulletAppState.getPhysicsSpace().add(ret);
+		return ret;
 	}
 
 	private void setUpLight()
@@ -201,34 +211,52 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		Vector3f camDir = cam.getUp().clone().multLocal(0.4f);
 		Vector3f camLeft = cam.getLeft().clone().multLocal(0.4f);
 		walkDirection.set(0, 0, 0);
-		int direction = 0;
+		int direction = Client.CMSG_MOVE_TELEPORT;
 		Vector3f dir = new Vector3f(0, 0, 0);
 		if (left)
 		{
 			dir = camLeft;
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_LEFT;
+			updatePlayerPos(dir, direction);
+			isMoving = true;
 		}
 		if (right)
 		{
 			dir = camLeft.negate();
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_RIGHT;
+			updatePlayerPos(dir, direction);
+			isMoving = true;
 		}
 		if (up)
 		{
 			dir = camDir;
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_FORWARD;
+			updatePlayerPos(dir, direction);
+			isMoving = true;
 		}
 		if (down)
 		{
 			dir = camDir.negate();
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_BACK;
+			updatePlayerPos(dir, direction);
+			isMoving = true;
 		}
 		player.setWalkDirection(walkDirection);
 		// camNode.lookAt(controlCube.getLocalTranslation(), Vector3f.UNIT_Z);
+		if (isMoving)
+		{
+			GameManager.getInstance().sendPlayerMove(Client.CMSG_MOVE_STOP, 0, 0, 0, 0);
+			isMoving = false;
+		}
+
+	}
+
+	private void updatePlayerPos(Vector3f dir, int direction)
+	{
 		camNode.setLocalTranslation(controlCube.getLocalTranslation().setY(currY));
 		GameManager.getInstance().sendPlayerMove(direction, dir.getX(), dir.getY(), dir.getZ(), 0);
 	}
@@ -257,6 +285,9 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		rootNode.attachChild(g);
 		players.put(enemy, g);
 		entities.put(enemy.getGuid(), g);
+		CharacterControl control = addCharacterControl();
+		g.addControl(control);
+		playerControls.put(enemy.getGuid(), control);
 	}
 
 	public void updateEntityPosition(Entity entity)
@@ -265,6 +296,17 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		if (g != null)
 		{
 			g.setLocalTranslation(entity.getX(), entity.getY(), entity.getZ());
+		}
+	}
+
+	public void entityVectorMove(Long guid, float x, float y, float z, float h)
+	{
+		CharacterControl control = playerControls.get(guid);
+		if (control != null)
+		{
+			Vector3f dir = new Vector3f();
+			dir.addLocal(new Vector3f(x, y, z));
+			control.setWalkDirection(dir);
 		}
 	}
 }
