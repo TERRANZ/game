@@ -2,23 +2,26 @@ package ru.terra.game.server.game.events;
 
 import org.jboss.netty.channel.Channel;
 
+import ru.terra.game.server.entity.PlayerEntity;
+
 public class LoginEvent extends Event
 {
-	private String name;
 
-	public LoginEvent(Channel channel, String name, long sender)
+	private PlayerEntity playerEntity;
+
+	public LoginEvent(Channel channel, PlayerEntity playerEntity)
 	{
-		super(channel, sender);
-		this.name = name;
+		super(channel, playerEntity.getGUID());
+		this.playerEntity = playerEntity;
 	}
 
-	public String getName()
+	public PlayerEntity getPlayerEntity()
 	{
-		return name;
+		return playerEntity;
 	}
 
-	public void setName(String name)
+	public void setPlayerEntity(PlayerEntity playerEntity)
 	{
-		this.name = name;
+		this.playerEntity = playerEntity;
 	}
 }

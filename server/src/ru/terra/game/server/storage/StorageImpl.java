@@ -20,7 +20,8 @@ public class StorageImpl implements Storage
 	public PlayerEntity loadPlayer(long uid)
 	{
 		log.info("loading player " + uid);
-		return null;
+		//TODO: NYI
+		return new PlayerEntity(uid);
 	}
 
 	@Override
@@ -40,6 +41,12 @@ public class StorageImpl implements Storage
 	public void load()
 	{
 		log.info("starting storage");
+	}
+
+	@Override
+	public long getGuidByName(String name)
+	{
+		return -1;
 	}
 
 }

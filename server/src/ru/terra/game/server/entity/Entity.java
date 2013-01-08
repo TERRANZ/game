@@ -6,7 +6,7 @@ import java.util.UUID;
 public abstract class Entity implements Serializable
 {
 	private static final long serialVersionUID = -2109883228832245234L;
-	private long guid = UUID.randomUUID().getLeastSignificantBits();
+	protected long guid = UUID.randomUUID().getLeastSignificantBits();
 	private float health = 100f;
 	private String name = "";
 	private float x = 0f;

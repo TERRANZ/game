@@ -34,15 +34,14 @@ public class NetworkManager
 		t.start();
 	}
 
-	public void sendLoginOk(Channel channel, long guid, String name)
+	public void sendLoginOk(Channel channel, PlayerEntity player)
 	{
-		log.info("sending login ok to guid " + guid);
-		channel.write(new OkPacket(guid));
-		PlayerEntity player = StorageManager.getStorage().loadPlayer(guid);
+		log.info("sending login ok to guid " + player.getGUID());
+		channel.write(new OkPacket(player.getGUID()));
 		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers())
 		{
-			if (playerEntity.getGUID() != guid)
-				playerEntity.getChannel().write(new PlayerLoggedInPacket(guid, player));
+			if (playerEntity.getGUID() != player.getGUID())
+				playerEntity.getChannel().write(new PlayerLoggedInPacket(player.getGUID(), player));
 		}
 	}
 

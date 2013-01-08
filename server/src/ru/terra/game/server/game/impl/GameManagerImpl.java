@@ -16,6 +16,8 @@ import ru.terra.game.server.game.events.LoginEvent;
 import ru.terra.game.server.game.events.PlayerMoveEvent;
 import ru.terra.game.server.game.events.SayEvent;
 import ru.terra.game.server.game.events.WispEvent;
+import ru.terra.game.server.storage.Storage;
+import ru.terra.game.server.storage.StorageManager;
 
 public class GameManagerImpl extends GameManager
 {
@@ -66,10 +68,16 @@ public class GameManagerImpl extends GameManager
 	public long playerLoggedIn(Channel channel, String name)
 	{
 		log.info("Player logged in : " + name);
-		PlayerEntity player = new PlayerEntity();
-		player.setName(name);
+		Storage storage = StorageManager.getStorage();
+		PlayerEntity player = storage.loadPlayer(storage.getGuidByName(name));
+		if (player == null)
+		{
+			player = new PlayerEntity(-1);
+			player.setName(name);
+			storage.savePlayer(player);
+		}
 		player.setChannel(channel);
-		addEvent(new LoginEvent(channel, name, player.getGUID()));
+		addEvent(new LoginEvent(channel, player));
 		players.add(player);
 		long guid = player.getGUID();
 		playersMap.put(guid, player);
