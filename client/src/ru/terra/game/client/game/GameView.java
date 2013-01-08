@@ -15,7 +15,7 @@ public abstract class GameView
 
 	public static GameView getView()
 	{
-		return new JMonkeyGameView();
+		return JMonkeyGameView.getInstance();
 	}
 
 	public abstract void enemyLoggedIn(Player enemy);

@@ -9,11 +9,22 @@ public class JMonkeyGameView extends GameView
 {
 	private JMEGameViewImpl jmeGameViewImpl;
 
-	@Override
-	public void init()
+	private static JMonkeyGameView instance = new JMonkeyGameView();
+
+	private JMonkeyGameView()
 	{
 		jmeGameViewImpl = new JMEGameViewImpl();
 		jmeGameViewImpl.start();
+	}
+
+	public static GameView getInstance()
+	{
+		return instance;
+	}
+
+	@Override
+	public void init()
+	{
 	}
 
 	@Override
