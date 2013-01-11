@@ -73,7 +73,7 @@ public class GameManagerImpl extends GameManager
 	{
 		log.info("Player logged in : " + name);
 		Storage storage = StorageManager.getStorage();
-		PlayerEntity player = storage.loadPlayer(storage.getGuidByName(name));
+		PlayerEntity player = storage.loadPlayer(storage.getPlayerGuidByName(name));
 		if (player == null)
 		{
 			player = new PlayerEntity(-1);

@@ -15,5 +15,5 @@ public interface Storage
 
 	public GameMap loadMap(int id);
 
-	public long getGuidByName(String name);
+	public long getPlayerGuidByName(String name);
 }

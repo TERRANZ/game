@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -161,6 +162,9 @@ public class PlayersJpaController
 		{
 			Query blocks = em.createNamedQuery("Players.findByGUID").setParameter("guid", guid);
 			return (Players) blocks.getSingleResult();
+		} catch (NoResultException e)
+		{
+			return null;
 		} finally
 		{
 			em.close();
@@ -183,4 +187,19 @@ public class PlayersJpaController
 		}
 	}
 
+	public Long getPlayerGuidByName(String name)
+	{
+		EntityManager em = getEntityManager();
+		try
+		{
+			Query blocks = em.createNamedQuery("Players.findByName").setParameter("name", name);
+			return ((Players) blocks.getSingleResult()).getUid().longValue();
+		} catch (NoResultException e)
+		{
+			return -1L;
+		} finally
+		{
+			em.close();
+		}
+	}
 }

@@ -40,6 +40,7 @@ public class StorageImpl implements Storage
 		{
 			p = new Players();
 			p.setId(-1);
+			p.setUid(BigInteger.valueOf(player.getGUID()));
 		}
 		p.setExp(BigInteger.valueOf(player.getPlayerInfo().getExp()));
 		p.setH(player.getH());
@@ -83,7 +84,7 @@ public class StorageImpl implements Storage
 		}
 		else
 		{
-			return new PlayerEntity(uid);
+			return null;
 		}
 		return ret;
 	}
@@ -132,9 +133,9 @@ public class StorageImpl implements Storage
 	}
 
 	@Override
-	public long getGuidByName(String name)
+	public long getPlayerGuidByName(String name)
 	{
-		return -1;
+		log.info("getting uid for name " + name);
+		return pjc.getPlayerGuidByName(name);
 	}
-
 }

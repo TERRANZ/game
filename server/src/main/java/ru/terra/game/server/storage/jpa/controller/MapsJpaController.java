@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -259,6 +260,9 @@ public class MapsJpaController
 		{
 			Query maps = em.createNamedQuery("Maps.findByID").setParameter("id", id);
 			return maps.getResultList();
+		} catch (NoResultException e)
+		{
+			return null;
 		} finally
 		{
 			em.close();

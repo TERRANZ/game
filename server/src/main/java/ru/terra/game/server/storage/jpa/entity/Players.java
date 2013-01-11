@@ -17,7 +17,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "players")
-@NamedQueries({ @NamedQuery(name = "Players.findByGUID", query = "SELECT p FROM Players p where p.uid =:guid") })
+@NamedQueries({ @NamedQuery(name = "Players.findByGUID", query = "SELECT p FROM Players p where p.uid =:guid"),
+		@NamedQuery(name = "Players.findByName", query = "SELECT p FROM Players p where p.name =:name")
+
+})
 public class Players implements Serializable
 {
 	private static final long serialVersionUID = 1L;
