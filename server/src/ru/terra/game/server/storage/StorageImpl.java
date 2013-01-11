@@ -19,7 +19,7 @@ public class StorageImpl implements Storage
 	public PlayerEntity loadPlayer(long uid)
 	{
 		log.info("loading player " + uid);
-		//TODO: NYI
+		// TODO: NYI
 		return new PlayerEntity(uid);
 	}
 

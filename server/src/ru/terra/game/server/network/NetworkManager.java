@@ -6,13 +6,10 @@ import org.jboss.netty.channel.Channel;
 import ru.terra.game.server.entity.PlayerEntity;
 import ru.terra.game.server.game.GameManager;
 import ru.terra.game.server.network.packet.MovementPacket;
-import ru.terra.game.server.network.packet.client.LoginPacket;
 import ru.terra.game.server.network.packet.client.SayPacket;
 import ru.terra.game.server.network.packet.server.OkPacket;
 import ru.terra.game.server.network.packet.server.PlayerInGamePacket;
 import ru.terra.game.server.network.packet.server.PlayerLoggedInPacket;
-import ru.terra.game.server.storage.StorageImpl;
-import ru.terra.game.server.storage.StorageManager;
 
 public class NetworkManager
 {

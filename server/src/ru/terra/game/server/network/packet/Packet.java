@@ -2,8 +2,6 @@ package ru.terra.game.server.network.packet;
 
 import java.io.IOException;
 
-import javax.security.auth.x500.X500Principal;
-
 import org.jboss.netty.buffer.ChannelBuffer;
 
 import ru.terra.game.server.entity.Entity;

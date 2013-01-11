@@ -31,7 +31,7 @@ public class PlayerInfoPacket extends Packet
 			buffer.writeInt(playerInfo.getHealth_curr());
 			buffer.writeInt(playerInfo.getHealth_max());
 			buffer.writeInt(playerInfo.getLevel());
-			buffer.writeLong(playerInfo.getExp());			
+			buffer.writeLong(playerInfo.getExp());
 		}
 	}
 }

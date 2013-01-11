@@ -14,6 +14,6 @@ public interface Storage
 	public void saveMap(GameMap map);
 
 	public GameMap loadMap();
-	
+
 	public long getGuidByName(String name);
 }
