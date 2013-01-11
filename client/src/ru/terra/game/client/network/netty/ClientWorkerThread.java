@@ -9,6 +9,7 @@ import ru.terra.game.client.network.packet.client.SayPacket;
 import ru.terra.game.client.network.packet.server.MapObjectAddPacket;
 import ru.terra.game.client.network.packet.server.OkPacket;
 import ru.terra.game.client.network.packet.server.PlayerInGamePacket;
+import ru.terra.game.client.network.packet.server.PlayerInfoPacket;
 import ru.terra.game.client.network.packet.server.PlayerLoggedInPacket;
 import ru.terra.game.shared.constants.OpCodes.Client;
 import ru.terra.game.shared.constants.OpCodes.Server;
@@ -79,6 +80,11 @@ public class ClientWorkerThread
 					movementPacket.getH());
 		}
 			break;
+		case Server.SMSG_PLAYER_INFO:
+		{
+			PlayerInfoPacket playerInfoPacket = (PlayerInfoPacket) packet;
+			gm.playerInfoUpdate(packet.getSender(), playerInfoPacket.getPlayerInfo());
+		}
 		}
 	}
 }

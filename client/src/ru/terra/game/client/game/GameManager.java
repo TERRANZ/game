@@ -9,6 +9,7 @@ import ru.terra.game.client.entity.Player;
 import ru.terra.game.client.network.NetworkManager;
 import ru.terra.game.client.network.packet.MovementPacket;
 import ru.terra.game.client.network.packet.server.OkPacket;
+import ru.terra.game.shared.entity.PlayerInfo;
 
 public class GameManager
 {
@@ -141,5 +142,9 @@ public class GameManager
 	{
 		mapObjects.put(mapObject.getGuid(), mapObject);
 		GameView.getView().addMapObject(mapObject);
+	}
+
+	public void playerInfoUpdate(Long target, PlayerInfo playerInfo)
+	{
 	}
 }

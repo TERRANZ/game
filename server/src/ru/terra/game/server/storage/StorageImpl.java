@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 
 import ru.terra.game.server.entity.PlayerEntity;
 import ru.terra.game.server.game.GameMap;
-import ru.terra.game.server.network.NetworkManager;
 
 public class StorageImpl implements Storage
 {

@@ -14,6 +14,7 @@ public interface OpCodes
 		public static final int CMSG_MOVE_TELEPORT = 9;
 		public static final int CMSG_MOVE_STOP = 10;
 		public static final int CMSG_LOGOUT = 11;
+		public static final int CMSG_PLAYER_INFO_REQUEST = 12;
 	}
 
 	public interface Server
@@ -29,5 +30,6 @@ public interface OpCodes
 		public static final int SMSG_MAPOBJECT_ADD = 509;
 		public static final int SMSG_ENTITY_DEL = 510;
 		public static final int SMSG_PLAYER_IN_GAME = 511;
+		public static final int SMSG_PLAYER_INFO = 512;
 	}
 }

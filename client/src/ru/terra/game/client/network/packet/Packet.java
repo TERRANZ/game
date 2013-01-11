@@ -9,6 +9,7 @@ import ru.terra.game.client.network.packet.client.LoginPacket;
 import ru.terra.game.client.network.packet.client.SayPacket;
 import ru.terra.game.client.network.packet.server.OkPacket;
 import ru.terra.game.client.network.packet.server.PlayerInGamePacket;
+import ru.terra.game.client.network.packet.server.PlayerInfoPacket;
 import ru.terra.game.client.network.packet.server.PlayerLoggedInPacket;
 import ru.terra.game.shared.constants.OpCodes;
 import ru.terra.game.shared.constants.OpCodes.Client;
@@ -64,6 +65,8 @@ public abstract class Packet
 			return new MovementPacket(opCode, sender);
 		case Server.SMSG_PLAYER_IN_GAME:
 			return new PlayerInGamePacket(sender);
+		case Server.SMSG_PLAYER_INFO:
+			return new PlayerInfoPacket(sender);
 		}
 		return null;
 	}

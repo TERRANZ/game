@@ -7,7 +7,6 @@ public abstract class Entity implements Serializable
 {
 	private static final long serialVersionUID = -2109883228832245234L;
 	protected long guid = UUID.randomUUID().getLeastSignificantBits();
-	private float health = 100f;
 	private String name = "";
 	private float x = 0f;
 	private float y = 0f;
@@ -17,16 +16,6 @@ public abstract class Entity implements Serializable
 	public long getGUID()
 	{
 		return guid;
-	}
-
-	public float getHealth()
-	{
-		return health;
-	}
-
-	public void setHealth(float health)
-	{
-		this.health = health;
 	}
 
 	public String getName()

@@ -26,7 +26,7 @@ public class PlayerInGamePacket extends Packet
 	public void send(ChannelBuffer buffer)
 	{
 		writeString(buffer, playerEntity.getName());
-		writePosition(buffer, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), playerEntity.getH());
+		writePosition(buffer, playerEntity);
 	}
 
 }

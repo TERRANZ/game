@@ -2,8 +2,11 @@ package ru.terra.game.server.network.packet;
 
 import java.io.IOException;
 
+import javax.security.auth.x500.X500Principal;
+
 import org.jboss.netty.buffer.ChannelBuffer;
 
+import ru.terra.game.server.entity.Entity;
 import ru.terra.game.server.network.packet.client.LoginPacket;
 import ru.terra.game.server.network.packet.client.SayPacket;
 import ru.terra.game.server.network.packet.client.WispPacket;
@@ -95,11 +98,11 @@ public abstract class Packet
 		}
 	}
 
-	protected void writePosition(ChannelBuffer buffer, float x, float y, float z, float h)
+	protected void writePosition(ChannelBuffer buffer, Entity entity)
 	{
-		buffer.writeFloat(x);
-		buffer.writeFloat(y);
-		buffer.writeFloat(z);
-		buffer.writeFloat(h);
+		buffer.writeFloat(entity.getX());
+		buffer.writeFloat(entity.getZ());
+		buffer.writeFloat(entity.getY());
+		buffer.writeFloat(entity.getH());
 	}
 }
