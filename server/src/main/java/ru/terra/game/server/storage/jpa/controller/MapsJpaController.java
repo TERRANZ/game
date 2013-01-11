@@ -18,8 +18,9 @@ import javax.persistence.criteria.Root;
 
 import ru.terra.game.server.storage.jpa.controller.exceptions.IllegalOrphanException;
 import ru.terra.game.server.storage.jpa.controller.exceptions.NonexistentEntityException;
-import ru.terra.game.server.storage.jpa.entity.MapObject;
+import ru.terra.game.server.storage.jpa.entity.MapObjectDB;
 import ru.terra.game.server.storage.jpa.entity.Maps;
+import ru.terra.game.server.storage.jpa.entity.Players;
 
 /**
  * 
@@ -44,22 +45,22 @@ public class MapsJpaController
 	{
 		if (maps.getMapObjects() == null)
 		{
-			maps.setMapObjects(new ArrayList<MapObject>());
+			maps.setMapObjects(new ArrayList<MapObjectDB>());
 		}
 		EntityManager em = null;
 		try
 		{
 			em = getEntityManager();
 			em.getTransaction().begin();
-			List<MapObject> attachedMapObjects = new ArrayList<MapObject>();
-			for (MapObject mapObjectsMapObjectToAttach : maps.getMapObjects())
+			List<MapObjectDB> attachedMapObjects = new ArrayList<MapObjectDB>();
+			for (MapObjectDB mapObjectsMapObjectToAttach : maps.getMapObjects())
 			{
 				mapObjectsMapObjectToAttach = em.getReference(mapObjectsMapObjectToAttach.getClass(), mapObjectsMapObjectToAttach.getId());
 				attachedMapObjects.add(mapObjectsMapObjectToAttach);
 			}
 			maps.setMapObjects(attachedMapObjects);
 			em.persist(maps);
-			for (MapObject mapObjectsMapObject : maps.getMapObjects())
+			for (MapObjectDB mapObjectsMapObject : maps.getMapObjects())
 			{
 				Maps oldMapOfMapObjectsMapObject = mapObjectsMapObject.getMap();
 				mapObjectsMapObject.setMap(maps);
@@ -88,10 +89,10 @@ public class MapsJpaController
 			em = getEntityManager();
 			em.getTransaction().begin();
 			Maps persistentMaps = em.find(Maps.class, maps.getId());
-			List<MapObject> mapObjectsOld = persistentMaps.getMapObjects();
-			List<MapObject> mapObjectsNew = maps.getMapObjects();
+			List<MapObjectDB> mapObjectsOld = persistentMaps.getMapObjects();
+			List<MapObjectDB> mapObjectsNew = maps.getMapObjects();
 			List<String> illegalOrphanMessages = null;
-			for (MapObject mapObjectsOldMapObject : mapObjectsOld)
+			for (MapObjectDB mapObjectsOldMapObject : mapObjectsOld)
 			{
 				if (!mapObjectsNew.contains(mapObjectsOldMapObject))
 				{
@@ -106,8 +107,8 @@ public class MapsJpaController
 			{
 				throw new IllegalOrphanException(illegalOrphanMessages);
 			}
-			List<MapObject> attachedMapObjectsNew = new ArrayList<MapObject>();
-			for (MapObject mapObjectsNewMapObjectToAttach : mapObjectsNew)
+			List<MapObjectDB> attachedMapObjectsNew = new ArrayList<MapObjectDB>();
+			for (MapObjectDB mapObjectsNewMapObjectToAttach : mapObjectsNew)
 			{
 				mapObjectsNewMapObjectToAttach = em.getReference(mapObjectsNewMapObjectToAttach.getClass(), mapObjectsNewMapObjectToAttach.getId());
 				attachedMapObjectsNew.add(mapObjectsNewMapObjectToAttach);
@@ -115,7 +116,7 @@ public class MapsJpaController
 			mapObjectsNew = attachedMapObjectsNew;
 			maps.setMapObjects(mapObjectsNew);
 			maps = em.merge(maps);
-			for (MapObject mapObjectsNewMapObject : mapObjectsNew)
+			for (MapObjectDB mapObjectsNewMapObject : mapObjectsNew)
 			{
 				if (!mapObjectsOld.contains(mapObjectsNewMapObject))
 				{
@@ -168,8 +169,8 @@ public class MapsJpaController
 				throw new NonexistentEntityException("The maps with id " + id + " no longer exists.", enfe);
 			}
 			List<String> illegalOrphanMessages = null;
-			List<MapObject> mapObjectsOrphanCheck = maps.getMapObjects();
-			for (MapObject mapObjectsOrphanCheckMapObject : mapObjectsOrphanCheck)
+			List<MapObjectDB> mapObjectsOrphanCheck = maps.getMapObjects();
+			for (MapObjectDB mapObjectsOrphanCheckMapObject : mapObjectsOrphanCheck)
 			{
 				if (illegalOrphanMessages == null)
 				{
@@ -249,6 +250,20 @@ public class MapsJpaController
 		{
 			em.close();
 		}
+	}
+
+	public List<Maps> findMapsByMapId(int id)
+	{
+		EntityManager em = getEntityManager();
+		try
+		{
+			Query maps = em.createNamedQuery("Maps.findByID").setParameter("id", id);
+			return maps.getResultList();
+		} finally
+		{
+			em.close();
+		}
+
 	}
 
 }

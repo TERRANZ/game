@@ -60,7 +60,7 @@ public class PlayerInfo implements Serializable
 		this.level = level;
 	}
 
-	public long getExp()
+	public Long getExp()
 	{
 		return exp;
 	}

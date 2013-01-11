@@ -13,7 +13,7 @@ public interface Storage
 
 	public void saveMap(GameMap map);
 
-	public GameMap loadMap();
+	public GameMap loadMap(int id);
 
 	public long getGuidByName(String name);
 }

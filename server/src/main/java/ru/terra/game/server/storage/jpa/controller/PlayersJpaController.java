@@ -154,6 +154,19 @@ public class PlayersJpaController
 		}
 	}
 
+	public Players findPlayerByGUID(long guid)
+	{
+		EntityManager em = getEntityManager();
+		try
+		{
+			Query blocks = em.createNamedQuery("Players.findByGUID").setParameter("guid", guid);
+			return (Players) blocks.getSingleResult();
+		} finally
+		{
+			em.close();
+		}
+	}
+
 	public int getPlayersCount()
 	{
 		EntityManager em = getEntityManager();

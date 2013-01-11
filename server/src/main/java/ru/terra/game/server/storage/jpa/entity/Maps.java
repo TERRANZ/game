@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -18,6 +20,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "maps")
+@NamedQueries({ @NamedQuery(name = "Maps.findByID", query = "SELECT m FROM Maps m where m.mapId =:id") })
 public class Maps implements Serializable
 {
 	private static final long serialVersionUID = 1L;
@@ -44,7 +47,7 @@ public class Maps implements Serializable
 
 	// bi-directional many-to-one association to MapObject
 	@OneToMany(mappedBy = "map")
-	private List<MapObject> mapObjects;
+	private List<MapObjectDB> mapObjects;
 
 	public Maps()
 	{
@@ -110,12 +113,12 @@ public class Maps implements Serializable
 		this.z = z;
 	}
 
-	public List<MapObject> getMapObjects()
+	public List<MapObjectDB> getMapObjects()
 	{
 		return this.mapObjects;
 	}
 
-	public void setMapObjects(List<MapObject> mapObjects)
+	public void setMapObjects(List<MapObjectDB> mapObjects)
 	{
 		this.mapObjects = mapObjects;
 	}

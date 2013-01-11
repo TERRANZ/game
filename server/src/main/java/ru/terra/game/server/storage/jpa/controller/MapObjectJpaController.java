@@ -16,7 +16,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import ru.terra.game.server.storage.jpa.controller.exceptions.NonexistentEntityException;
-import ru.terra.game.server.storage.jpa.entity.MapObject;
+import ru.terra.game.server.storage.jpa.entity.MapObjectDB;
 import ru.terra.game.server.storage.jpa.entity.Maps;
 
 /**
@@ -38,7 +38,7 @@ public class MapObjectJpaController
 		return emf.createEntityManager();
 	}
 
-	public void create(MapObject mapObject)
+	public void create(MapObjectDB mapObject)
 	{
 		EntityManager em = null;
 		try
@@ -67,14 +67,14 @@ public class MapObjectJpaController
 		}
 	}
 
-	public void edit(MapObject mapObject) throws NonexistentEntityException, Exception
+	public void edit(MapObjectDB mapObject) throws NonexistentEntityException, Exception
 	{
 		EntityManager em = null;
 		try
 		{
 			em = getEntityManager();
 			em.getTransaction().begin();
-			MapObject persistentMapObject = em.find(MapObject.class, mapObject.getId());
+			MapObjectDB persistentMapObject = em.find(MapObjectDB.class, mapObject.getId());
 			Maps mapOld = persistentMapObject.getMap();
 			Maps mapNew = mapObject.getMap();
 			if (mapNew != null)
@@ -122,10 +122,10 @@ public class MapObjectJpaController
 		{
 			em = getEntityManager();
 			em.getTransaction().begin();
-			MapObject mapObject;
+			MapObjectDB mapObject;
 			try
 			{
-				mapObject = em.getReference(MapObject.class, id);
+				mapObject = em.getReference(MapObjectDB.class, id);
 				mapObject.getId();
 			} catch (EntityNotFoundException enfe)
 			{
@@ -148,23 +148,23 @@ public class MapObjectJpaController
 		}
 	}
 
-	public List<MapObject> findMapObjectEntities()
+	public List<MapObjectDB> findMapObjectEntities()
 	{
 		return findMapObjectEntities(true, -1, -1);
 	}
 
-	public List<MapObject> findMapObjectEntities(int maxResults, int firstResult)
+	public List<MapObjectDB> findMapObjectEntities(int maxResults, int firstResult)
 	{
 		return findMapObjectEntities(false, maxResults, firstResult);
 	}
 
-	private List<MapObject> findMapObjectEntities(boolean all, int maxResults, int firstResult)
+	private List<MapObjectDB> findMapObjectEntities(boolean all, int maxResults, int firstResult)
 	{
 		EntityManager em = getEntityManager();
 		try
 		{
 			CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-			cq.select(cq.from(MapObject.class));
+			cq.select(cq.from(MapObjectDB.class));
 			Query q = em.createQuery(cq);
 			if (!all)
 			{
@@ -178,12 +178,12 @@ public class MapObjectJpaController
 		}
 	}
 
-	public MapObject findMapObject(int id)
+	public MapObjectDB findMapObject(int id)
 	{
 		EntityManager em = getEntityManager();
 		try
 		{
-			return em.find(MapObject.class, id);
+			return em.find(MapObjectDB.class, id);
 		} finally
 		{
 			em.close();
@@ -196,7 +196,7 @@ public class MapObjectJpaController
 		try
 		{
 			CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-			Root<MapObject> rt = cq.from(MapObject.class);
+			Root<MapObjectDB> rt = cq.from(MapObjectDB.class);
 			cq.select(em.getCriteriaBuilder().count(rt));
 			Query q = em.createQuery(cq);
 			return ((Long) q.getSingleResult()).intValue();

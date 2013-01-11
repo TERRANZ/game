@@ -17,7 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "map_objects")
-public class MapObject implements Serializable
+public class MapObjectDB implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -37,7 +37,7 @@ public class MapObject implements Serializable
 	@JoinColumn(name = "uid", nullable = false)
 	private Maps map;
 
-	public MapObject()
+	public MapObjectDB()
 	{
 	}
 

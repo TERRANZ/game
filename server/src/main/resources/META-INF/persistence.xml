@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 	<persistence-unit name="terragamePU" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<class>ru.terra.game.server.storage.jpa.entity.MapObject</class>
+		<class>ru.terra.game.server.storage.jpa.entity.MapObjectDB</class>
 		<class>ru.terra.game.server.storage.jpa.entity.Maps</class>
 		<class>ru.terra.game.server.storage.jpa.entity.Players</class>
 		<shared-cache-mode>ALL</shared-cache-mode>

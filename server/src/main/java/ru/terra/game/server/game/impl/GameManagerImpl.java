@@ -29,6 +29,7 @@ public class GameManagerImpl extends GameManager
 	private HashMap<Long, PlayerEntity> playersMap = new HashMap<>();
 	private Logger log = Logger.getLogger(GameManagerImpl.class);
 	private GameMap gameMap1 = new GameMap();
+	private Storage storage = StorageManager.getStorage();
 
 	private GameManagerImpl()
 	{
@@ -64,6 +65,7 @@ public class GameManagerImpl extends GameManager
 		log.info("Starting game manager...");
 		Thread t = new Thread(new GameThread(getInstance()));
 		t.start();
+		gameMap1 = storage.loadMap(1);
 	}
 
 	@Override
