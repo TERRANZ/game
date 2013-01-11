@@ -1,13 +1,28 @@
 package ru.terra.game.server.storage;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.apache.log4j.Logger;
 
 import ru.terra.game.server.entity.PlayerEntity;
 import ru.terra.game.server.game.GameMap;
+import ru.terra.game.server.storage.jpa.controller.MapObjectJpaController;
+import ru.terra.game.server.storage.jpa.controller.MapsJpaController;
+import ru.terra.game.server.storage.jpa.controller.PlayersJpaController;
 
 public class StorageImpl implements Storage
 {
 	private Logger log = Logger.getLogger(StorageImpl.class);
+	private PlayersJpaController pjc;
+	private MapsJpaController mjc;
+	private MapObjectJpaController mojc;
+		
+	
+	public StorageImpl()
+	{
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("terragamePU");
+	}
 
 	@Override
 	public void savePlayer(PlayerEntity player)
