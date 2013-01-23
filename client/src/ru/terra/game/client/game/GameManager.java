@@ -12,6 +12,7 @@ import ru.terra.game.client.entity.Player;
 import ru.terra.game.client.network.NetworkManager;
 import ru.terra.game.client.network.packet.MovementPacket;
 import ru.terra.game.client.network.packet.server.OkPacket;
+import ru.terra.game.shared.constants.OpCodes.Client;
 import ru.terra.game.shared.entity.PlayerInfo;
 
 public class GameManager
@@ -149,5 +150,11 @@ public class GameManager
 
 	public void playerInfoUpdate(Long target, PlayerInfo playerInfo)
 	{
+	}
+
+	public void sendPlayerCurrPos(float x, float y, float z, float h)
+	{
+		MovementPacket movementPacket = new MovementPacket(Client.CMSG_MOVE_TELEPORT, getPlayeGuid(), x, y, z, h);
+		nm.sendMove(movementPacket);
 	}
 }

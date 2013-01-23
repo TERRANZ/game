@@ -41,7 +41,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 	private Spatial sceneModel;
 	private BulletAppState bulletAppState;
 	private RigidBodyControl landscape;
-	private CharacterControl player;
+	private CharacterControl playerControl;
 	private Vector3f walkDirection = new Vector3f();
 	private boolean left = false, right = false, up = false, down = false;
 	private TerrainQuad terrain;
@@ -100,7 +100,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		rootNode.attachChild(sceneModel);
 		bulletAppState.getPhysicsSpace().add(landscape);
 
-		player = addCharacterControl();
+		playerControl = addCharacterControl();
 
 		Box b = new Box(5, 5, 5);
 		controlCube = new Geometry("Box", b);
@@ -120,7 +120,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		camNode.lookAt(controlCube.getLocalTranslation(), Vector3f.UNIT_Z);
 		// Attach the camNode to the target:
 		rootNode.attachChild(camNode);
-		controlCube.addControl(player);
+		controlCube.addControl(playerControl);
 		GameManager.getInstance().login();
 	}
 
@@ -193,7 +193,9 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		{
 			isMoving = false;
 			logger.info("Character walking end.");
+			Vector3f lastPos = playerControl.getPhysicsLocation();
 			GameManager.getInstance().sendPlayerMove(Client.CMSG_MOVE_STOP, 0, 0, 0, 0);
+			GameManager.getInstance().sendPlayerCurrPos(lastPos.getX(), lastPos.getY(), lastPos.getZ(), 0);
 			logger.info("sending STOP");
 		}
 
@@ -274,7 +276,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			sendPlayerMovingVector(dir, direction);
 			// isMoving = true;
 		}
-		player.setWalkDirection(walkDirection);
+		playerControl.setWalkDirection(walkDirection);
 	}
 
 	private void sendPlayerMovingVector(Vector3f dir, int direction)
@@ -322,24 +324,40 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		});
 	}
 
-	public void updateEntityPosition(Entity entity)
+	public void updateEntityPosition(final Entity entity)
 	{
-		Geometry g = entities.get(entity.getGuid());
-		if (g != null)
+		enqueue(new Callable<Long>()
 		{
-			g.setLocalTranslation(entity.getX(), entity.getY(), entity.getZ());
-		}
+			@Override
+			public Long call() throws Exception
+			{
+				Geometry g = entities.get(entity.getGuid());
+				if (g != null)
+				{
+					g.setLocalTranslation(entity.getX(), entity.getY(), entity.getZ());
+				}
+				return null;
+			}
+		});
 	}
 
-	public void entityVectorMove(Long guid, float x, float y, float z, float h)
+	public void entityVectorMove(final Long guid, final float x, final float y, final float z, float h)
 	{
-		CharacterControl control = playerControls.get(guid);
-		Logger.getLogger(getClass()).info("guid " + guid + " moving " + " x = " + x + " y = " + y + " z = " + z);
-		if (control != null)
+		enqueue(new Callable<Long>()
 		{
-			Vector3f dir = new Vector3f();
-			dir.addLocal(new Vector3f(x, y, z));
-			control.setWalkDirection(dir);
-		}
+			@Override
+			public Long call() throws Exception
+			{
+				CharacterControl control = playerControls.get(guid);
+				Logger.getLogger(getClass()).info("guid " + guid + " moving " + " x = " + x + " y = " + y + " z = " + z);
+				if (control != null)
+				{
+					Vector3f dir = new Vector3f();
+					dir.addLocal(new Vector3f(x, y, z));
+					control.setWalkDirection(dir);
+				}
+				return null;
+			}
+		});
 	}
 }
