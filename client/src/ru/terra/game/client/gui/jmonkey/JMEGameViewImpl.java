@@ -1,6 +1,7 @@
 package ru.terra.game.client.gui.jmonkey;
 
 import java.util.HashMap;
+import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 
@@ -64,6 +65,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		/**
 		 * Set up Physics
 		 */
+		setPauseOnLostFocus(false);
 		bulletAppState = new BulletAppState();
 		stateManager.attach(bulletAppState);
 		// bulletAppState.getPhysicsSpace().enableDebug(assetManager);
@@ -279,19 +281,28 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		entities.put(entity.getGuid(), g);
 	}
 
-	public void enemyLoggedIn(Player enemy)
+	public void enemyLoggedIn(final Player enemy)
 	{
-		Sphere s = new Sphere(10, 10, 5);
-		Geometry g = new Geometry("Sphere", s);
-		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-		g.setMaterial(mat);
-		g.setLocalTranslation(enemy.getX() + 10, enemy.getY() + 10, enemy.getZ() + 10);
-		rootNode.attachChild(g);
-		players.put(enemy, g);
-		entities.put(enemy.getGuid(), g);
-		CharacterControl control = addCharacterControl();
-		g.addControl(control);
-		playerControls.put(enemy.getGuid(), control);
+		enqueue(new Callable<Long>()
+		{
+			@Override
+			public Long call() throws Exception
+			{
+				// TODO Auto-generated method stub
+				Sphere s = new Sphere(10, 10, 5);
+				Geometry g = new Geometry("Sphere", s);
+				Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+				g.setMaterial(mat);
+				g.setLocalTranslation(enemy.getX() + 10, enemy.getY() + 10, enemy.getZ() + 10);
+				rootNode.attachChild(g);
+				players.put(enemy, g);
+				entities.put(enemy.getGuid(), g);
+				CharacterControl control = addCharacterControl();
+				g.addControl(control);
+				playerControls.put(enemy.getGuid(), control);
+				return null;
+			}
+		});
 	}
 
 	public void updateEntityPosition(Entity entity)

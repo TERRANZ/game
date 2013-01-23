@@ -48,7 +48,7 @@ public class ClientWorkerThread
 			break;
 		case Server.SMSG_PLAYER_IN_GAME:
 		{
-			gm.enemyLoggedIn(((PlayerInGamePacket) packet).getEnemy());
+			gm.enemyAlreadyInGame(((PlayerInGamePacket) packet).getEnemy());
 		}
 			break;
 		case Server.SMSG_MAPOBJECT_ADD:

@@ -34,7 +34,8 @@ public class NetworkManager
 
 	public void sendLoginOk(Channel channel, PlayerEntity player)
 	{
-		log.info("sending login ok to guid " + player.getGUID());
+		long guid = player.getGUID();
+		log.info("sending login ok to guid " + guid);
 		channel.write(new OkPacket(player.getGUID()));
 		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers())
 		{
@@ -42,6 +43,7 @@ public class NetworkManager
 			{
 				playerEntity.getChannel().write(new PlayerLoggedInPacket(player.getGUID(), player));
 				channel.write(new PlayerInGamePacket(playerEntity.getGUID(), playerEntity));
+				log.info("sending for player " + guid + " that player " + playerEntity.getGUID() + " has logged in");
 			}
 		}
 

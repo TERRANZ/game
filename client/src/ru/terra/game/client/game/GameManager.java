@@ -1,6 +1,9 @@
 package ru.terra.game.client.game;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Random;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
@@ -48,7 +51,7 @@ public class GameManager
 		{
 			log.info("login");
 			setGameState(GameState.LOGGING_IN);
-			nm.sendLogin("TERRANZ");
+			nm.sendLogin("TERRANZ" + new Date().getTime());
 		}
 	}
 
