@@ -14,6 +14,5 @@ public class Main
 		Logger.getLogger(Main.class).info("Starting server...");
 		StorageManager.getStorage().load();
 		NetworkManager.getInstance().start();
-
 	}
 }

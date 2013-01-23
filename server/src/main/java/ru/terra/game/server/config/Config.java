@@ -1,5 +1,7 @@
 package ru.terra.game.server.config;
 
+import ru.terra.game.server.config.impl.ApacheConfigImpl;
+
 public abstract class Config
 {
 	public abstract String read(String key, String defvalue);
@@ -13,6 +15,6 @@ public abstract class Config
 
 	public static Config getConfig()
 	{
-		return null;
+		return ApacheConfigImpl.getInstance();
 	}
 }
