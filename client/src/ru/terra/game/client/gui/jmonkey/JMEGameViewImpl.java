@@ -59,6 +59,8 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 	private Material mat1;
 	private boolean isMoving = false;
 	private CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
+	private Logger logger = Logger.getLogger(getClass());
+	private int pressed = 0;
 
 	public void simpleInitApp()
 	{
@@ -155,7 +157,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
 		inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
 		inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_S));
-		inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
+		// inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
 		inputManager.addMapping("Z", new KeyTrigger(KeyInput.KEY_Z));
 		inputManager.addMapping("Q", new KeyTrigger(KeyInput.KEY_Q));
 		inputManager.addListener(this, "Left");
@@ -170,8 +172,31 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 	/**
 	 * These are our custom actions triggered by key presses. We do not walk yet, we just keep track of the direction the user pressed.
 	 */
+
 	public void onAction(String binding, boolean value, float tpf)
 	{
+		if (value == true)
+		{
+			pressed++;
+		}
+		else
+		{
+			pressed--;
+		}
+
+		if (pressed == 1 && value && !isMoving)
+		{
+			isMoving = true;
+			logger.info("Character walking init.");
+		}
+		else if (pressed == 0 & !value)
+		{
+			isMoving = false;
+			logger.info("Character walking end.");
+			GameManager.getInstance().sendPlayerMove(Client.CMSG_MOVE_STOP, 0, 0, 0, 0);
+			logger.info("sending STOP");
+		}
+
 		if (binding.equals("Left"))
 		{
 			left = value;
@@ -223,7 +248,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_LEFT;
 			sendPlayerMovingVector(dir, direction);
-			isMoving = true;
+			// isMoving = true;
 		}
 		if (right)
 		{
@@ -231,7 +256,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_RIGHT;
 			sendPlayerMovingVector(dir, direction);
-			isMoving = true;
+			// isMoving = true;
 		}
 		if (up)
 		{
@@ -239,7 +264,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_FORWARD;
 			sendPlayerMovingVector(dir, direction);
-			isMoving = true;
+			// isMoving = true;
 		}
 		if (down)
 		{
@@ -247,17 +272,9 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_BACK;
 			sendPlayerMovingVector(dir, direction);
-			isMoving = true;
+			// isMoving = true;
 		}
 		player.setWalkDirection(walkDirection);
-		// camNode.lookAt(controlCube.getLocalTranslation(), Vector3f.UNIT_Z);
-		if (isMoving)
-		{
-			// GameManager.getInstance().sendPlayerMove(Client.CMSG_MOVE_STOP, 0, 0, 0, 0);
-			// Logger.getLogger(getClass()).info("sending STOP");
-			isMoving = false;
-		}
-
 	}
 
 	private void sendPlayerMovingVector(Vector3f dir, int direction)
