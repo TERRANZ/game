@@ -20,6 +20,7 @@ import ru.terra.game.server.game.events.SayEvent;
 import ru.terra.game.server.game.events.WispEvent;
 import ru.terra.game.server.storage.Storage;
 import ru.terra.game.server.storage.StorageManager;
+import ru.terra.game.shared.constants.OpCodes.Client;
 
 public class GameManagerImpl extends GameManager
 {
@@ -157,10 +158,30 @@ public class GameManagerImpl extends GameManager
 	}
 
 	@Override
-	public void updatePlayerPos(Channel channel, long sender, int direction, float x, float y, float z, float h)
+	public void updatePlayerPos(Channel channel, long sender, int direction, final float x, final float y, final float z, final float h)
 	{
-		log.info("player =" + sender + " moving x = " + x + " y = " + y + " z = " + z);
-		PlayerMoveEvent playerMoveEvent = new PlayerMoveEvent(channel, sender, direction, x, y, z, h);
-		addEvent(playerMoveEvent);
+		// log.info("player =" + sender + " moving x = " + x + " y = " + y + " z = " + z);
+		addEvent(new PlayerMoveEvent(channel, sender, direction, x, y, z, h));
+		if (direction == Client.CMSG_MOVE_STOP)
+		{
+			final PlayerEntity p = getPlayer(sender);
+			if (p != null)
+			{
+				new Thread(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						p.setX(x);
+						p.setY(y);
+						p.setZ(z);
+						p.setH(h);
+						storage.savePlayer(p);
+						log.info("player stopped moving, save its position");
+					}
+				}).start();
+
+			}
+		}
 	}
 }

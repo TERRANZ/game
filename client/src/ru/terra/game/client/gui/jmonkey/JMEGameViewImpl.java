@@ -349,7 +349,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			public Long call() throws Exception
 			{
 				CharacterControl control = playerControls.get(guid);
-				Logger.getLogger(getClass()).info("guid " + guid + " moving " + " x = " + x + " y = " + y + " z = " + z);
+				// Logger.getLogger(getClass()).info("guid " + guid + " moving " + " x = " + x + " y = " + y + " z = " + z);
 				if (control != null)
 				{
 					if (!stop)

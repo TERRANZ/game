@@ -40,7 +40,7 @@ public class ClientHandler extends SimpleChannelUpstreamHandler
 		// непостредственно.
 		// Я передаю ему канал игрока (функция e.getChannel()), чтобы он мог в него посылать пакеты
 		worker = new ClientWorkerThread(this, e.getChannel());
-		log.info("channelConnected");
+		// log.info("channelConnected");
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class ClientHandler extends SimpleChannelUpstreamHandler
 		// Событие закрытия канала. Используется в основном, чтобы освободить ресурсы, или выполнить другие действия, которые происходят при
 		// отключении пользователя. Если его не обработать, Вы можете и не заметить, что пользователь отключился, если он напрямую не сказал этого
 		// серверу, а просто оборвался канал.
-		log.info("channelDisconnected");
+		// log.info("channelDisconnected");
 		worker.disconnectedFromChannel();
 	}
 
@@ -57,7 +57,7 @@ public class ClientHandler extends SimpleChannelUpstreamHandler
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
 	{
 		// Функция принимает уже готовые Packet'ы от игрока, поэтому их можно сразу посылать в worker. За их формирование отвечает другой обработчик.
-		log.info("messageReceived");
+		// log.info("messageReceived");
 		if (e.getChannel().isOpen())
 			worker.acceptPacket((Packet) e.getMessage());
 	}
