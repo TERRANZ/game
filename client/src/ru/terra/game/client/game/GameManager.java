@@ -123,10 +123,10 @@ public class GameManager
 		return player;
 	}
 
-	public void entityVectorMoving(long guid, float x, float y, float z, float h)
+	public void entityVectorMoving(long guid, float x, float y, float z, float h, boolean stop)
 	{
 		Player enemy = enemies.get(guid);
-		GameView.getView().entityVectorMove(enemy, x, y, z, h);
+		GameView.getView().entityVectorMove(enemy, x, y, z, h, stop);
 	}
 
 	public void setEntityPosition(long guid, float x, float y, float z, float h)

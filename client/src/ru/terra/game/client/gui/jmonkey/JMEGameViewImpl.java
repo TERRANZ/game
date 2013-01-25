@@ -194,8 +194,8 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			isMoving = false;
 			logger.info("Character walking end.");
 			Vector3f lastPos = playerControl.getPhysicsLocation();
-			GameManager.getInstance().sendPlayerMove(Client.CMSG_MOVE_STOP, 0, 0, 0, 0);
-			GameManager.getInstance().sendPlayerCurrPos(lastPos.getX(), lastPos.getY(), lastPos.getZ(), 0);
+			GameManager.getInstance().sendPlayerMove(Client.CMSG_MOVE_STOP, lastPos.getX(), lastPos.getY(), lastPos.getZ(), 0);
+			// GameManager.getInstance().sendPlayerCurrPos(lastPos.getX(), lastPos.getY(), lastPos.getZ(), 0);
 			logger.info("sending STOP");
 		}
 
@@ -331,17 +331,17 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 			@Override
 			public Long call() throws Exception
 			{
-				Geometry g = entities.get(entity.getGuid());
-				if (g != null)
+				CharacterControl c = playerControls.get(entity.getGuid());
+				if (c != null)
 				{
-					g.setLocalTranslation(entity.getX(), entity.getY(), entity.getZ());
+					c.setPhysicsLocation(new Vector3f(entity.getX(), entity.getY(), entity.getZ()));
 				}
 				return null;
 			}
 		});
 	}
 
-	public void entityVectorMove(final Long guid, final float x, final float y, final float z, float h)
+	public void entityVectorMove(final Long guid, final float x, final float y, final float z, float h, final boolean stop)
 	{
 		enqueue(new Callable<Long>()
 		{
@@ -352,9 +352,19 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 				Logger.getLogger(getClass()).info("guid " + guid + " moving " + " x = " + x + " y = " + y + " z = " + z);
 				if (control != null)
 				{
-					Vector3f dir = new Vector3f();
-					dir.addLocal(new Vector3f(x, y, z));
-					control.setWalkDirection(dir);
+					if (!stop)
+					{
+						Vector3f dir = new Vector3f();
+						dir.addLocal(new Vector3f(x, y, z));
+						control.setWalkDirection(dir);
+					}
+					else
+					{
+						Vector3f dir = new Vector3f();
+						dir.addLocal(new Vector3f(0, 0, 0));
+						control.setWalkDirection(dir);
+						control.setPhysicsLocation(new Vector3f(x, y, z));
+					}
 				}
 				return null;
 			}

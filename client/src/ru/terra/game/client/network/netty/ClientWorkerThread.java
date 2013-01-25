@@ -63,13 +63,14 @@ public class ClientWorkerThread
 		{
 			MovementPacket movementPacket = (MovementPacket) packet;
 			gm.entityVectorMoving(movementPacket.getSender(), movementPacket.getX(), movementPacket.getY(), movementPacket.getZ(),
-					movementPacket.getH());
+					movementPacket.getH(), false);
 		}
 			break;
 		case Client.CMSG_MOVE_STOP:
 		{
 			MovementPacket movementPacket = (MovementPacket) packet;
-			gm.entityVectorMoving(movementPacket.getSender(), 0, 0, 0, movementPacket.getH());
+			gm.entityVectorMoving(movementPacket.getSender(), movementPacket.getX(), movementPacket.getY(), movementPacket.getZ(),
+					movementPacket.getH(), true);
 		}
 			break;
 		case Client.CMSG_MOVE_TELEPORT:
