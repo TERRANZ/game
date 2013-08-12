@@ -18,6 +18,7 @@ import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -35,8 +36,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 
-public class JMEGameViewImpl extends SimpleApplication implements ActionListener
-{
+public class JMEGameViewImpl extends SimpleApplication implements ActionListener {
 
 	private Spatial sceneModel;
 	private BulletAppState bulletAppState;
@@ -61,9 +61,9 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 	private CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
 	private Logger logger = Logger.getLogger(getClass());
 	private int pressed = 0;
+	private BitmapText hudText;
 
-	public void simpleInitApp()
-	{
+	public void simpleInitApp() {
 		/**
 		 * Set up Physics
 		 */
@@ -72,7 +72,8 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		stateManager.attach(bulletAppState);
 		// bulletAppState.getPhysicsSpace().enableDebug(assetManager);
 
-		// We re-use the flyby camera for rotation, while positioning is handled by physics
+		// We re-use the flyby camera for rotation, while positioning is handled
+		// by physics
 		viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
 		// flyCam.setMoveSpeed(100);
 		setUpKeys();
@@ -84,7 +85,8 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		sceneModel.setLocalScale(2f);
 
 		// We set up collision detection for the scene by creating a
-		// compound collision shape and a static RigidBodyControl with mass zero.
+		// compound collision shape and a static RigidBodyControl with mass
+		// zero.
 		CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
 		landscape = new RigidBodyControl(sceneShape, 0);
 		sceneModel.addControl(landscape);
@@ -95,7 +97,8 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		// size, stepheight, jumping, falling, and gravity.
 		// We also put the player in its starting position.
 
-		// We attach the scene and the player to the rootNode and the physics space,
+		// We attach the scene and the player to the rootNode and the physics
+		// space,
 		// to make them appear in the game world.
 		rootNode.attachChild(sceneModel);
 		bulletAppState.getPhysicsSpace().add(landscape);
@@ -124,8 +127,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		GameManager.getInstance().login();
 	}
 
-	private CharacterControl addCharacterControl()
-	{
+	private CharacterControl addCharacterControl() {
 		CharacterControl ret = new CharacterControl(capsuleShape, 0.05f);
 		// player.setJumpSpeed(20);
 		// player.setFallSpeed(30);
@@ -135,8 +137,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		return ret;
 	}
 
-	private void setUpLight()
-	{
+	private void setUpLight() {
 		// We add light so we see the scene
 		AmbientLight al = new AmbientLight();
 		al.setColor(ColorRGBA.White.mult(1.3f));
@@ -149,10 +150,10 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 	}
 
 	/**
-	 * We over-write some navigational key mappings here, so we can add physics-controlled walking and jumping:
+	 * We over-write some navigational key mappings here, so we can add
+	 * physics-controlled walking and jumping:
 	 */
-	private void setUpKeys()
-	{
+	private void setUpKeys() {
 		inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
 		inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
 		inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
@@ -170,106 +171,85 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 	}
 
 	/**
-	 * These are our custom actions triggered by key presses. We do not walk yet, we just keep track of the direction the user pressed.
+	 * These are our custom actions triggered by key presses. We do not walk
+	 * yet, we just keep track of the direction the user pressed.
 	 */
 
-	public void onAction(String binding, boolean value, float tpf)
-	{
-		if (value == true)
-		{
+	public void onAction(String binding, boolean value, float tpf) {
+		if (value == true) {
 			pressed++;
-		}
-		else
-		{
+		} else {
 			pressed--;
 		}
 
-		if (pressed == 1 && value && !isMoving)
-		{
+		if (pressed == 1 && value && !isMoving) {
 			isMoving = true;
 			logger.info("Character walking init.");
-		}
-		else if (pressed == 0 & !value)
-		{
+		} else if (pressed == 0 & !value) {
 			isMoving = false;
 			logger.info("Character walking end.");
 			Vector3f lastPos = playerControl.getPhysicsLocation();
 			GameManager.getInstance().sendPlayerMove(Client.CMSG_MOVE_STOP, lastPos.getX(), lastPos.getY(), lastPos.getZ(), 0);
-			// GameManager.getInstance().sendPlayerCurrPos(lastPos.getX(), lastPos.getY(), lastPos.getZ(), 0);
+			// GameManager.getInstance().sendPlayerCurrPos(lastPos.getX(),
+			// lastPos.getY(), lastPos.getZ(), 0);
 			logger.info("sending STOP");
 		}
 
-		if (binding.equals("Left"))
-		{
+		if (binding.equals("Left")) {
 			left = value;
-		}
-		else if (binding.equals("Right"))
-		{
+		} else if (binding.equals("Right")) {
 			right = value;
-		}
-		else if (binding.equals("Up"))
-		{
+		} else if (binding.equals("Up")) {
 			up = value;
-		}
-		else if (binding.equals("Down"))
-		{
+		} else if (binding.equals("Down")) {
 			down = value;
-		}
-		else if (binding.equals("Jump"))
-		{
+		} else if (binding.equals("Jump")) {
 			// player.jump();
-		}
-		else if (binding.equals("Q"))
-		{
+		} else if (binding.equals("Q")) {
 			currY = currY + diffY;
 			camNode.setLocalTranslation(new Vector3f(0, currY, 0));
-		}
-		else if (binding.equals("Z"))
-		{
+		} else if (binding.equals("Z")) {
 			currY = currY - diffY;
 			camNode.setLocalTranslation(new Vector3f(0, currY, 0));
 		}
 	}
 
 	/**
-	 * This is the main event loop--walking happens here. We check in which direction the player is walking by interpreting the camera direction
-	 * forward (camDir) and to the side (camLeft). The setWalkDirection() command is what lets a physics-controlled player walk. We also make sure
+	 * This is the main event loop--walking happens here. We check in which
+	 * direction the player is walking by interpreting the camera direction
+	 * forward (camDir) and to the side (camLeft). The setWalkDirection()
+	 * command is what lets a physics-controlled player walk. We also make sure
 	 * here that the camera moves with player.
 	 */
 	@Override
-	public void simpleUpdate(float tpf)
-	{
+	public void simpleUpdate(float tpf) {
 		Vector3f camDir = cam.getUp().clone().multLocal(0.4f);
 		Vector3f camLeft = cam.getLeft().clone().multLocal(0.4f);
 		walkDirection.set(0, 0, 0);
 		int direction = Client.CMSG_MOVE_TELEPORT;
 		Vector3f dir = new Vector3f(0, 0, 0);
-		if (left)
-		{
+		if (left) {
 			dir = camLeft;
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_LEFT;
 			sendPlayerMovingVector(dir, direction);
 			// isMoving = true;
 		}
-		if (right)
-		{
+		if (right) {
 			dir = camLeft.negate();
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_RIGHT;
 			sendPlayerMovingVector(dir, direction);
 			// isMoving = true;
 		}
-		if (up)
-		{
+		if (up) {
 			dir = camDir;
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_FORWARD;
 			sendPlayerMovingVector(dir, direction);
 			// isMoving = true;
 		}
-		if (down)
-		{
+		if (down) {
 			dir = camDir.negate();
 			walkDirection.addLocal(dir);
 			direction = Client.CMSG_MOVE_BACK;
@@ -279,18 +259,15 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		playerControl.setWalkDirection(walkDirection);
 	}
 
-	private void sendPlayerMovingVector(Vector3f dir, int direction)
-	{
+	private void sendPlayerMovingVector(Vector3f dir, int direction) {
 		camNode.setLocalTranslation(controlCube.getLocalTranslation().setY(currY));
 		GameManager.getInstance().sendPlayerMove(direction, dir.getX(), dir.getY(), dir.getZ(), 0);
 	}
 
-	public void loadPlayer()
-	{
+	public void loadPlayer() {
 	}
 
-	public void addMapObject(MapObject entity)
-	{
+	public void addMapObject(MapObject entity) {
 		Box b = new Box(2, 2, 2);
 		Geometry g = new Geometry("Box", b);
 		g.setMaterial(mat1);
@@ -300,13 +277,10 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		entities.put(entity.getGuid(), g);
 	}
 
-	public void enemyLoggedIn(final Player enemy)
-	{
-		enqueue(new Callable<Long>()
-		{
+	public void enemyLoggedIn(final Player enemy) {
+		enqueue(new Callable<Long>() {
 			@Override
-			public Long call() throws Exception
-			{
+			public Long call() throws Exception {
 				// TODO Auto-generated method stub
 				Sphere s = new Sphere(10, 10, 5);
 				Geometry g = new Geometry("Sphere", s);
@@ -324,16 +298,12 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		});
 	}
 
-	public void updateEntityPosition(final Entity entity)
-	{
-		enqueue(new Callable<Long>()
-		{
+	public void updateEntityPosition(final Entity entity) {
+		enqueue(new Callable<Long>() {
 			@Override
-			public Long call() throws Exception
-			{
+			public Long call() throws Exception {
 				CharacterControl c = playerControls.get(entity.getGuid());
-				if (c != null)
-				{
+				if (c != null) {
 					c.setPhysicsLocation(new Vector3f(entity.getX(), entity.getY(), entity.getZ()));
 				}
 				return null;
@@ -341,25 +311,19 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 		});
 	}
 
-	public void entityVectorMove(final Long guid, final float x, final float y, final float z, float h, final boolean stop)
-	{
-		enqueue(new Callable<Long>()
-		{
+	public void entityVectorMove(final Long guid, final float x, final float y, final float z, float h, final boolean stop) {
+		enqueue(new Callable<Long>() {
 			@Override
-			public Long call() throws Exception
-			{
+			public Long call() throws Exception {
 				CharacterControl control = playerControls.get(guid);
-				// Logger.getLogger(getClass()).info("guid " + guid + " moving " + " x = " + x + " y = " + y + " z = " + z);
-				if (control != null)
-				{
-					if (!stop)
-					{
+				// Logger.getLogger(getClass()).info("guid " + guid + " moving "
+				// + " x = " + x + " y = " + y + " z = " + z);
+				if (control != null) {
+					if (!stop) {
 						Vector3f dir = new Vector3f();
 						dir.addLocal(new Vector3f(x, y, z));
 						control.setWalkDirection(dir);
-					}
-					else
-					{
+					} else {
 						Vector3f dir = new Vector3f();
 						dir.addLocal(new Vector3f(0, 0, 0));
 						control.setWalkDirection(dir);
@@ -369,5 +333,25 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
 				return null;
 			}
 		});
+	}
+
+	public void serverMessage(String message) {
+		if (hudText == null)
+			hudText = new BitmapText(guiFont, false);
+		hudText.setSize(guiFont.getCharSet().getRenderedSize()); // font size
+		hudText.setColor(ColorRGBA.Blue); // font color
+		hudText.setText(message); // the text
+		hudText.setLocalTranslation(300, hudText.getLineHeight(), 0); // position
+		guiNode.attachChild(hudText);
+	}
+
+	public void playerSay(Player player, String message) {
+		if (hudText == null)
+			hudText = new BitmapText(guiFont, false);
+		hudText.setSize(guiFont.getCharSet().getRenderedSize()); // font size
+		hudText.setColor(ColorRGBA.Red); // font color
+		hudText.setText(player.getName() + " : " + message); // the text
+		hudText.setLocalTranslation(300, hudText.getLineHeight(), 0); // position
+		guiNode.attachChild(hudText);
 	}
 }

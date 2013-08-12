@@ -8,8 +8,7 @@ import ru.terra.game.server.entity.PlayerEntity;
 import ru.terra.game.server.game.events.Event;
 import ru.terra.game.server.game.impl.GameManagerImpl;
 
-public abstract class GameManager
-{
+public abstract class GameManager {
 	public abstract ArrayList<PlayerEntity> getPlayers();
 
 	public abstract PlayerEntity getPlayer(long guid);
@@ -24,8 +23,7 @@ public abstract class GameManager
 
 	public abstract void playerWisp(Channel channel, String message, long sender, long target);
 
-	public static GameManager getGameManager()
-	{
+	public static GameManager getGameManager() {
 		return GameManagerImpl.getInstance();
 	}
 
@@ -38,4 +36,6 @@ public abstract class GameManager
 	public abstract void updateGame(int delta);
 
 	public abstract void updatePlayerPos(Channel channel, long sender, int direction, float x, float y, float z, float h);
+
+	public abstract void serverSay(String message);
 }

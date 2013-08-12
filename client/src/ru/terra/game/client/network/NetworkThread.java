@@ -20,7 +20,7 @@ public class NetworkThread implements Runnable
 		bootstrap.setPipelineFactory(new ClientPipelineFactory());
 		bootstrap.setOption("tcpNoDelay", true);
 		bootstrap.setOption("keepAlive", true);
-		ChannelFuture c = bootstrap.connect(new InetSocketAddress("localhost", 12345));
+		ChannelFuture c = bootstrap.connect(new InetSocketAddress("127.0.0.1", 12345));
 		NetworkManager.getInstance().setChannel(c.getChannel());
 	}
 }

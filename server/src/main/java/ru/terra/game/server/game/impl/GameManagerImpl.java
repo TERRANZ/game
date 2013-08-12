@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
 
+import ru.terra.game.server.entity.MapObject;
 import ru.terra.game.server.entity.PlayerEntity;
 import ru.terra.game.server.game.GameManager;
 import ru.terra.game.server.game.GameMap;
@@ -17,10 +18,12 @@ import ru.terra.game.server.game.events.Event;
 import ru.terra.game.server.game.events.LoginEvent;
 import ru.terra.game.server.game.events.PlayerMoveEvent;
 import ru.terra.game.server.game.events.SayEvent;
+import ru.terra.game.server.game.events.ServerMessageEvent;
 import ru.terra.game.server.game.events.WispEvent;
 import ru.terra.game.server.storage.Storage;
 import ru.terra.game.server.storage.StorageManager;
 import ru.terra.game.shared.constants.OpCodes.Client;
+import ru.terra.game.shared.entity.EntityCoordinates;
 import ru.terra.game.shared.entity.PlayerInfo;
 
 public class GameManagerImpl extends GameManager {
@@ -164,9 +167,16 @@ public class GameManagerImpl extends GameManager {
 
 	private void processAdminCommand(String cmd, long playerId) {
 		PlayerEntity player = getPlayer(playerId);
-		switch (cmd) {
+		String[] parsedCommand = cmd.split(" ");
+		switch (parsedCommand[0]) {
 		case "/addo": {
-			
+			if (parsedCommand.length == 3) {
+				MapObject mo = new MapObject();
+				mo.applyCoordinates(player);
+				mo.setModel(Long.parseLong(parsedCommand[1]));
+				mo.setName(parsedCommand[2]);
+				gameMap1.addObject(mo);
+			}
 		}
 			break;
 		case "/delo": {
@@ -175,6 +185,16 @@ public class GameManagerImpl extends GameManager {
 		case "/help": {
 		}
 			break;
+		case "/say": {
+			addEvent(new ServerMessageEvent(null, 0, parsedCommand[1]));
 		}
+			break;
+		}
+	}
+
+	@Override
+	public void serverSay(String message) {
+		log.info("Server saying: " + message);
+		addEvent(new ServerMessageEvent(null, 0, message));
 	}
 }

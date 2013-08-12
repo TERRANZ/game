@@ -6,27 +6,24 @@ import ru.terra.game.server.game.events.Event;
 import ru.terra.game.server.game.events.LoginEvent;
 import ru.terra.game.server.game.events.PlayerMoveEvent;
 import ru.terra.game.server.game.events.SayEvent;
+import ru.terra.game.server.game.events.ServerMessageEvent;
 import ru.terra.game.server.network.NetworkManager;
 
-public class GameThread implements Runnable
-{
+public class GameThread implements Runnable {
 	private GameManager gameManager = GameManager.getGameManager();
 	private boolean isRun = true;
 	private Logger log = Logger.getLogger(GameThread.class);
 
-	public GameThread(GameManager gameManager)
-	{
+	public GameThread(GameManager gameManager) {
 		super();
 		this.gameManager = gameManager;
 		log.info("Starting game thread...");
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		long lastLoop = getTime();
-		while (isRun)
-		{
+		while (isRun) {
 			int delta = (int) (getTime() - lastLoop);
 			lastLoop = getTime();
 
@@ -34,35 +31,29 @@ public class GameThread implements Runnable
 
 			Event e = gameManager.getNextEvent();
 			if (e == null)
-				try
-				{
+				try {
 					Thread.sleep(1);
-				} catch (InterruptedException e1)
-				{
+				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-			else
-			{
-				if (e instanceof LoginEvent)
-				{
+			else {
+				if (e instanceof LoginEvent) {
 					NetworkManager.getInstance().sendLoginOk(e.getChannel(), ((LoginEvent) e).getPlayerEntity());
-				}
-				else if (e instanceof SayEvent)
-				{
+				} else if (e instanceof SayEvent) {
 					NetworkManager.getInstance().sendSay(((SayEvent) e).getSender(), ((SayEvent) e).getMessage());
-				}
-				else if (e instanceof PlayerMoveEvent)
-				{
+				} else if (e instanceof PlayerMoveEvent) {
 					PlayerMoveEvent event = (PlayerMoveEvent) e;
 					NetworkManager.getInstance().sendPlayerMove(event.getSender(), event.getDirection(), event.getX(), event.getY(), event.getZ(),
 							event.getH());
+				} else if (e instanceof ServerMessageEvent) {
+					ServerMessageEvent event = (ServerMessageEvent) e;
+					NetworkManager.getInstance().sendServerMessage(event.getMessage());
 				}
 			}
 		}
 	}
 
-	public long getTime()
-	{
+	public long getTime() {
 		return System.currentTimeMillis() & 0x7FFFFFFFFFFFFFFFL;
 	}
 }

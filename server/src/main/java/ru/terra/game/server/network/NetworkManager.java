@@ -10,37 +10,32 @@ import ru.terra.game.server.network.packet.client.SayPacket;
 import ru.terra.game.server.network.packet.server.OkPacket;
 import ru.terra.game.server.network.packet.server.PlayerInGamePacket;
 import ru.terra.game.server.network.packet.server.PlayerLoggedInPacket;
+import ru.terra.game.server.network.packet.server.PlayerSayPacket;
+import ru.terra.game.server.network.packet.server.ServerMessagePacket;
 
-public class NetworkManager
-{
+public class NetworkManager {
 	private static NetworkManager instance = new NetworkManager();
 	private Logger log = Logger.getLogger(NetworkManager.class);
 
-	private NetworkManager()
-	{
+	private NetworkManager() {
 	}
 
-	public static NetworkManager getInstance()
-	{
+	public static NetworkManager getInstance() {
 		return instance;
 	}
 
-	public void start()
-	{
+	public void start() {
 		log.info("Starting network manager...");
 		Thread t = new Thread(new NetworkThread());
 		t.start();
 	}
 
-	public void sendLoginOk(Channel channel, PlayerEntity player)
-	{
+	public void sendLoginOk(Channel channel, PlayerEntity player) {
 		long guid = player.getGUID();
 		log.info("sending login ok to guid " + guid);
 		channel.write(new OkPacket(player.getGUID()));
-		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers())
-		{
-			if (playerEntity.getGUID() != player.getGUID())
-			{
+		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers()) {
+			if (playerEntity.getGUID() != player.getGUID()) {
 				playerEntity.getChannel().write(new PlayerLoggedInPacket(player.getGUID(), player));
 				channel.write(new PlayerInGamePacket(playerEntity.getGUID(), playerEntity));
 				log.info("sending for player " + guid + " that player " + playerEntity.getGUID() + " has logged in");
@@ -49,28 +44,29 @@ public class NetworkManager
 
 	}
 
-	public void sendOk(PlayerEntity playerEntity)
-	{
+	public void sendOk(PlayerEntity playerEntity) {
 		log.info("sending ok to player " + playerEntity.getName());
 		playerEntity.getChannel().write(new OkPacket(playerEntity.getGUID()));
 	}
 
-	public void sendSay(long playerGUID, String message)
-	{
+	public void sendSay(long playerGUID, String message) {
 		log.info("sending say from " + playerGUID + " : " + message);
-		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers())
-		{
+		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers()) {
 			if (playerEntity.getGUID() != playerGUID)
-				playerEntity.getChannel().write(new SayPacket(playerGUID, message));
+				playerEntity.getChannel().write(new PlayerSayPacket(playerGUID, message));
 		}
 	}
 
-	public void sendPlayerMove(long playerGUID, int direction, float x, float y, float z, float h)
-	{
-		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers())
-		{
+	public void sendPlayerMove(long playerGUID, int direction, float x, float y, float z, float h) {
+		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers()) {
 			if (playerEntity.getGUID() != playerGUID)
 				playerEntity.getChannel().write(new MovementPacket(direction, playerGUID, x, y, z, h));
+		}
+	}
+
+	public void sendServerMessage(String message) {
+		for (PlayerEntity playerEntity : GameManager.getGameManager().getPlayers()) {
+			playerEntity.getChannel().write(new ServerMessagePacket(message));
 		}
 	}
 }

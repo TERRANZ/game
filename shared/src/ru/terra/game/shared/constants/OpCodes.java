@@ -31,5 +31,6 @@ public interface OpCodes
 		public static final int SMSG_ENTITY_DEL = 510;
 		public static final int SMSG_PLAYER_IN_GAME = 511;
 		public static final int SMSG_PLAYER_INFO = 512;
+        public static final int SMSG_MESSAGE = 513;
 	}
 }
