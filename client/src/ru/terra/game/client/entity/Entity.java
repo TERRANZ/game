@@ -1,10 +1,11 @@
 package ru.terra.game.client.entity;
 
-public abstract class Entity
+import ru.terra.game.shared.entity.EntityCoordinates;
+
+public abstract class Entity extends EntityCoordinates
 {
 	private String name;
 	private long guid;
-	private float x, y, z, h;
 
 	public Entity(long guid, String name)
 	{

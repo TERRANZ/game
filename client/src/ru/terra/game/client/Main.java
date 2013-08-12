@@ -10,28 +10,22 @@ import ru.terra.game.client.game.GUIManager;
 import ru.terra.game.client.game.GameManager;
 import ru.terra.game.client.network.NetworkManager;
 
-public class Main
-{
+public class Main {
 
-	public static void main(String argv[]) throws IOException
-	{
+	public static void main(String argv[]) throws IOException {
 		BasicConfigurator.configure();
 		NetworkManager.getInstance().start();
 		GameManager.getInstance().start();
 		GUIManager.getInstance().start();
-		// BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-		// String line = "";
-		// while (true)
-		// {
-		// line = keyboard.readLine();
-		// if ("login".equals(line))
-		// {
-		//
-		// }
-		// else
-		// {
-		// GameManager.getInstance().sendSay(line);
-		// }
-		// }
+		BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
+		String line = "";
+		while (true) {
+			line = keyboard.readLine();
+			if ("login".equals(line)) {
+
+			} else {
+				GameManager.getInstance().sendSay(line);
+			}
+		}
 	}
 }

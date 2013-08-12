@@ -21,9 +21,9 @@ import ru.terra.game.server.game.events.WispEvent;
 import ru.terra.game.server.storage.Storage;
 import ru.terra.game.server.storage.StorageManager;
 import ru.terra.game.shared.constants.OpCodes.Client;
+import ru.terra.game.shared.entity.PlayerInfo;
 
-public class GameManagerImpl extends GameManager
-{
+public class GameManagerImpl extends GameManager {
 	private static GameManagerImpl instance = new GameManagerImpl();
 	private LinkedList<Event> events = new LinkedList<>();
 	private List<PlayerEntity> players = Collections.synchronizedList(new ArrayList<PlayerEntity>());
@@ -32,37 +32,30 @@ public class GameManagerImpl extends GameManager
 	private GameMap gameMap1 = new GameMap();
 	private Storage storage = StorageManager.getStorage();
 
-	private GameManagerImpl()
-	{
+	private GameManagerImpl() {
 	}
 
 	@Override
-	public synchronized Event getNextEvent()
-	{
-		if (events.size() > 0)
-		{
+	public synchronized Event getNextEvent() {
+		if (events.size() > 0) {
 			Event e = events.getLast();
 			events.remove(e);
 			return e;
-		}
-		else
+		} else
 			return null;
 	}
 
 	@Override
-	public synchronized void addEvent(Event e)
-	{
+	public synchronized void addEvent(Event e) {
 		events.addFirst(e);
 	}
 
-	public static GameManagerImpl getInstance()
-	{
+	public static GameManagerImpl getInstance() {
 		return instance;
 	}
 
 	@Override
-	public void start()
-	{
+	public void start() {
 		log.info("Starting game manager...");
 		Thread t = new Thread(new GameThread(getInstance()));
 		t.start();
@@ -70,13 +63,11 @@ public class GameManagerImpl extends GameManager
 	}
 
 	@Override
-	public long playerLoggedIn(Channel channel, String name)
-	{
+	public long playerLoggedIn(Channel channel, String name) {
 		log.info("Player logged in : " + name);
 		Storage storage = StorageManager.getStorage();
 		PlayerEntity player = storage.loadPlayer(storage.getPlayerGuidByName(name));
-		if (player == null)
-		{
+		if (player == null) {
 			player = new PlayerEntity(-1);
 			player.setName(name);
 			storage.savePlayer(player);
@@ -90,59 +81,50 @@ public class GameManagerImpl extends GameManager
 	}
 
 	@Override
-	public void playerSaid(Channel channel, String message, long player)
-	{
+	public void playerSaid(Channel channel, String message, long player) {
 		log.info("Player said  : " + message);
-		addEvent(new SayEvent(channel, message, player));
+		if (message.startsWith("/"))
+			processAdminCommand(message, player);
+		else
+			addEvent(new SayEvent(channel, message, player));
 	}
 
 	@Override
-	public void playerWisp(Channel channel, String message, long sender, long target)
-	{
+	public void playerWisp(Channel channel, String message, long sender, long target) {
 		log.info("player " + sender + " whisps to " + target + " " + message);
 		addEvent(new WispEvent(channel, message, sender, target));
 	}
 
 	@Override
-	public ArrayList getPlayers()
-	{
-		synchronized (players)
-		{
+	public ArrayList getPlayers() {
+		synchronized (players) {
 			return new ArrayList<PlayerEntity>(players);
 		}
 	}
 
 	@Override
-	public synchronized PlayerEntity getPlayer(long guid)
-	{
+	public synchronized PlayerEntity getPlayer(long guid) {
 		return playersMap.get(guid);
 	}
 
 	@Override
-	public void removePlayer(long guid)
-	{
+	public void removePlayer(long guid) {
 		log.info("removing player with guid: " + guid);
-		synchronized (playersMap)
-		{
+		synchronized (playersMap) {
 			PlayerEntity pe = playersMap.get(guid);
 			playersMap.remove(guid);
-			synchronized (players)
-			{
+			synchronized (players) {
 				players.remove(pe);
 			}
 		}
 	}
 
 	@Override
-	public void removePlayer(Channel channel)
-	{
+	public void removePlayer(Channel channel) {
 		log.info("removing player with channel: " + channel.getId());
-		synchronized (players)
-		{
-			for (PlayerEntity p : players)
-			{
-				if (p.getChannel().equals(channel))
-				{
+		synchronized (players) {
+			for (PlayerEntity p : players) {
+				if (p.getChannel().equals(channel)) {
 					playersMap.remove(p.getGUID());
 					players.remove(p);
 					break;
@@ -152,26 +134,21 @@ public class GameManagerImpl extends GameManager
 	}
 
 	@Override
-	public void updateGame(int delta)
-	{
+	public void updateGame(int delta) {
 
 	}
 
 	@Override
-	public void updatePlayerPos(Channel channel, long sender, int direction, final float x, final float y, final float z, final float h)
-	{
-		// log.info("player =" + sender + " moving x = " + x + " y = " + y + " z = " + z);
+	public void updatePlayerPos(Channel channel, long sender, int direction, final float x, final float y, final float z, final float h) {
+		// log.info("player =" + sender + " moving x = " + x + " y = " + y +
+		// " z = " + z);
 		addEvent(new PlayerMoveEvent(channel, sender, direction, x, y, z, h));
-		if (direction == Client.CMSG_MOVE_STOP)
-		{
+		if (direction == Client.CMSG_MOVE_STOP) {
 			final PlayerEntity p = getPlayer(sender);
-			if (p != null)
-			{
-				new Thread(new Runnable()
-				{
+			if (p != null) {
+				new Thread(new Runnable() {
 					@Override
-					public void run()
-					{
+					public void run() {
 						p.setX(x);
 						p.setY(y);
 						p.setZ(z);
@@ -182,6 +159,22 @@ public class GameManagerImpl extends GameManager
 				}).start();
 
 			}
+		}
+	}
+
+	private void processAdminCommand(String cmd, long playerId) {
+		PlayerEntity player = getPlayer(playerId);
+		switch (cmd) {
+		case "/addo": {
+			
+		}
+			break;
+		case "/delo": {
+		}
+			break;
+		case "/help": {
+		}
+			break;
 		}
 	}
 }

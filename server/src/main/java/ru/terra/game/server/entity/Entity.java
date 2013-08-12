@@ -3,15 +3,14 @@ package ru.terra.game.server.entity;
 import java.io.Serializable;
 import java.util.UUID;
 
-public abstract class Entity implements Serializable
+import ru.terra.game.shared.entity.EntityCoordinates;
+
+public abstract class Entity extends EntityCoordinates implements Serializable 
 {
 	private static final long serialVersionUID = -2109883228832245234L;
 	protected long guid = UUID.randomUUID().getLeastSignificantBits();
 	private String name = "";
-	private float x = 0f;
-	private float y = 0f;
-	private float z = 0f;
-	private float h = 0f;
+
 
 	public long getGUID()
 	{
