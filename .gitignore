@@ -5,3 +5,5 @@
 *.war
 *.ear
 target
+/client/jmeproj/nbproject/private/
+/client/jmeproj/build/
