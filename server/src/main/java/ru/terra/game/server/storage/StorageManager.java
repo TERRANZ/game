@@ -1,18 +1,15 @@
 package ru.terra.game.server.storage;
 
-public class StorageManager
-{
-	private Storage storage = new StorageImpl();
+public class StorageManager {
+    private final Storage storage = new StorageImpl();
 
-	private static StorageManager instance = new StorageManager();
+    private static final StorageManager instance = new StorageManager();
 
-	private StorageManager()
-	{
-	}
+    private StorageManager() {
+    }
 
-	public static Storage getStorage()
-	{
-		return instance.storage;
-	}
+    public static Storage getStorage() {
+        return instance.storage;
+    }
 
 }
