@@ -18,7 +18,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
@@ -42,6 +41,7 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
     private CharacterControl playerControl;
     private final Vector3f walkDirection = new Vector3f();
     private boolean left = false, right = false, up = false, down = false;
+    private boolean moveSent = false;
     private TerrainQuad terrain;
     Material mat_terrain;
     private float currY = 500;
@@ -180,10 +180,11 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
             pressed--;
         }
 
-        if (pressed == 1 && value && !isMoving) {
+        if (pressed == 1 && value) {
             isMoving = true;
             logger.info("Character walking init.");
         } else if (pressed == 0 & !value) {
+            moveSent = false;
             isMoving = false;
             logger.info("Character walking end.");
             Vector3f lastPos = playerControl.getPhysicsLocation();
@@ -193,22 +194,30 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
             logger.info("sending STOP");
         }
 
-        if (binding.equals("Left")) {
-            left = value;
-        } else if (binding.equals("Right")) {
-            right = value;
-        } else if (binding.equals("Up")) {
-            up = value;
-        } else if (binding.equals("Down")) {
-            down = value;
-        } else if (binding.equals("Jump")) {
-            // player.jump();
-        } else if (binding.equals("Q")) {
-            currY = currY + diffY;
-            camNode.setLocalTranslation(new Vector3f(0, currY, 0));
-        } else if (binding.equals("Z")) {
-            currY = currY - diffY;
-            camNode.setLocalTranslation(new Vector3f(0, currY, 0));
+        switch (binding) {
+            case "Left":
+                left = value;
+                break;
+            case "Right":
+                right = value;
+                break;
+            case "Up":
+                up = value;
+                break;
+            case "Down":
+                down = value;
+                break;
+            case "Jump":
+                // player.jump();
+                break;
+            case "Q":
+                currY = currY + diffY;
+                camNode.setLocalTranslation(new Vector3f(0, currY, 0));
+                break;
+            case "Z":
+                currY = currY - diffY;
+                camNode.setLocalTranslation(new Vector3f(0, currY, 0));
+                break;
         }
     }
 
@@ -224,42 +233,42 @@ public class JMEGameViewImpl extends SimpleApplication implements ActionListener
         Vector3f camDir = cam.getUp().clone().multLocal(0.4f);
         Vector3f camLeft = cam.getLeft().clone().multLocal(0.4f);
         walkDirection.set(0, 0, 0);
-        int direction = Client.CMSG_MOVE_TELEPORT;
-        Vector3f dir = new Vector3f(0, 0, 0);
+        int direction;
+        Vector3f dir;
+
         if (left) {
             dir = camLeft;
             walkDirection.addLocal(dir);
             direction = Client.CMSG_MOVE_LEFT;
             sendPlayerMovingVector(dir, direction);
-            // isMoving = true;
         }
         if (right) {
             dir = camLeft.negate();
             walkDirection.addLocal(dir);
             direction = Client.CMSG_MOVE_RIGHT;
             sendPlayerMovingVector(dir, direction);
-            // isMoving = true;
         }
         if (up) {
             dir = camDir;
             walkDirection.addLocal(dir);
             direction = Client.CMSG_MOVE_FORWARD;
             sendPlayerMovingVector(dir, direction);
-            // isMoving = true;
         }
         if (down) {
             dir = camDir.negate();
             walkDirection.addLocal(dir);
             direction = Client.CMSG_MOVE_BACK;
             sendPlayerMovingVector(dir, direction);
-            // isMoving = true;
         }
         playerControl.setWalkDirection(walkDirection);
     }
 
     private void sendPlayerMovingVector(Vector3f dir, int direction) {
         camNode.setLocalTranslation(controlCube.getLocalTranslation().setY(currY));
-        GameManager.getInstance().sendPlayerMove(direction, dir.getX(), dir.getY(), dir.getZ(), 0);
+        if (!moveSent) {
+            GameManager.getInstance().sendPlayerMove(direction, dir.getX(), dir.getY(), dir.getZ(), 0);
+            moveSent = true;
+        }
     }
 
     public void loadPlayer() {

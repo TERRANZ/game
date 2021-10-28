@@ -13,7 +13,7 @@
 			<property name="eclipselink.logging.timestamp" value="true" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://192.168.1.3:3306/terragame" />
 			<property name="javax.persistence.jdbc.password" value="jbrss" />
-			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.user" value="jbrss" />
 			<property name="eclipselink.ddl-generation" value="create-tables" />
 		</properties>
