@@ -3,17 +3,16 @@ package ru.terra.game.server.storage;
 import ru.terra.game.server.entity.PlayerEntity;
 import ru.terra.game.server.game.GameMap;
 
-public interface Storage
-{
-	public void load();
+public interface Storage {
+    void load();
 
-	public void savePlayer(PlayerEntity player);
+    void savePlayer(PlayerEntity player);
 
-	public PlayerEntity loadPlayer(long uid);
+    PlayerEntity loadPlayer(long uid);
 
-	public void saveMap(GameMap map);
+    void saveMap(GameMap map);
 
-	public GameMap loadMap(int id);
+    GameMap loadMap(int id);
 
-	public long getPlayerGuidByName(String name);
+    long getPlayerGuidByName(String name);
 }

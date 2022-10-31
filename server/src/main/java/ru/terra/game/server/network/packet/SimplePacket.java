@@ -3,22 +3,18 @@ package ru.terra.game.server.network.packet;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 //пакет без параметров
-public class SimplePacket extends Packet
-{
+public class SimplePacket extends Packet {
 
-	public SimplePacket(int opCode, long sender)
-	{
-		super(opCode, sender);
-	}
+    public SimplePacket(int opCode, long sender) {
+        super(opCode, sender);
+    }
 
-	@Override
-	public void get(ChannelBuffer buffer)
-	{
-	}
+    @Override
+    public void get(ChannelBuffer buffer) {
+    }
 
-	@Override
-	public void send(ChannelBuffer buffer)
-	{
-	}
+    @Override
+    public void send(ChannelBuffer buffer) {
+    }
 
 }

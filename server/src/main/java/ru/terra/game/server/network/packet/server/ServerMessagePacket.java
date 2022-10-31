@@ -6,23 +6,23 @@ import ru.terra.game.shared.constants.OpCodes;
 
 public class ServerMessagePacket extends Packet {
 
-	private String message;
+    private final String message;
 
-	public ServerMessagePacket(String message) {
-		super(OpCodes.Server.SMSG_MESSAGE, 0);
-		this.message = message;
-	}
+    public ServerMessagePacket(String message) {
+        super(OpCodes.Server.SMSG_MESSAGE, 0);
+        this.message = message;
+    }
 
-	@Override
-	public void get(ChannelBuffer buffer) {
-	}
+    @Override
+    public void get(ChannelBuffer buffer) {
+    }
 
-	@Override
-	public void send(ChannelBuffer buffer) {
-		buffer.writeShort(message.length());
-		for (int i = 0; i < message.length(); ++i) {
-			buffer.writeChar(message.charAt(i));
-		}
-	}
+    @Override
+    public void send(ChannelBuffer buffer) {
+        buffer.writeShort(message.length());
+        for (int i = 0; i < message.length(); ++i) {
+            buffer.writeChar(message.charAt(i));
+        }
+    }
 
 }
