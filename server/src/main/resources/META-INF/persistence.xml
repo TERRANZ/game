@@ -11,11 +11,11 @@
 		<properties>
 			<property name="eclipselink.jdbc.cache-statements" value="true" />
 			<property name="eclipselink.logging.timestamp" value="true" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/terragame" />
-			<property name="javax.persistence.jdbc.password" value="as" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/twochdownloader" />
+			<property name="javax.persistence.jdbc.password" value="tw" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			<property name="javax.persistence.jdbc.user" value="as" />
-			<property name="eclipselink.ddl-generation" value="update" />
+			<property name="javax.persistence.jdbc.user" value="tw" />
+			<property name="eclipselink.ddl-generation" value="create-tables" />
 		</properties>
 	</persistence-unit>
 </persistence>
